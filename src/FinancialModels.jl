@@ -1,5 +1,9 @@
 module FinancialModels
 
-# package code goes here
+  using DifferentialEquations
+  import DifferentialEquations: solve
+
+  include("problems.jl")
+
 
 end # module

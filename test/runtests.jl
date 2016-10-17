@@ -2,4 +2,5 @@ using FinancialModels
 using Base.Test
 
 # write your own tests here
-@test 1 == 2
+prob = HestonProblem(1.,1.,1.,1.,1.,[1.;1.])
+sol = solve(prob)
