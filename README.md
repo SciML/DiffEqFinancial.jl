@@ -14,6 +14,8 @@ sol = solve(prob)
 plot(sol)
 ```
 
+Full documentation coming soon.
+
 These solvers use DifferentialEquations.jl, meaning that high-performance and
 high order algorithms are available.
 
