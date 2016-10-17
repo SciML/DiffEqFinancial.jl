@@ -5,6 +5,8 @@ module FinancialModels
 
   include("problems.jl")
 
-  export HestonProblem, BlackScholesProblem
+  export HestonProblem, BlackScholesProblem, GeneralizedBlackScholesProblem,
+  ExtendedOrnsteinUhlenbeckProblem, OrnsteinUhlenbeckProblem, GeometricBrownianMotionProblem,
+  MfStateProblem
 
 end # module
