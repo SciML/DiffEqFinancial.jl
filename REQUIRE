@@ -1,3 +1,3 @@
 julia 0.5
-DifferentialEquations 0.4.2
-Reexport
+DiffEqBase
+StochasticDiffEq

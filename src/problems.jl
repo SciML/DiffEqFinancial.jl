@@ -36,7 +36,7 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u₀)
   numvars = 2
   sizeu = (2,)
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a size 2 vector")
   end
   isinplace = true
   HestonProblem(μ,κ,Θ,σ,ρ,u₀,f,g,analytic,knownanalytic,
@@ -49,7 +49,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type GeneralizedBlackScholesProblem
+type GeneralizedBlackScholesProblem <: AbstractSDEProblem
   r
   q
   Θ
@@ -76,9 +76,9 @@ function GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀)
   knownanalytic = false
   analytic=(t,u,W)->0
   numvars = 1
-  sizeu = (1,)
+  sizeu = ()
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a number")
   end
   isinplace = false
   GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,f,g,analytic,knownanalytic,
@@ -91,7 +91,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type BlackScholesProblem
+type BlackScholesProblem <: AbstractSDEProblem
   r
   Θ
   σ
@@ -113,7 +113,7 @@ BlackScholesProblem(r,Θ,σ,u₀) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,�
 ``dx = a(b(t)-x)dt + σ dW_t``
 
 """
-type ExtendedOrnsteinUhlenbeckProblem
+type ExtendedOrnsteinUhlenbeckProblem <: AbstractSDEProblem
   a
   b
   σ
@@ -139,9 +139,9 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀)
   knownanalytic = false
   analytic=(t,u,W)->0
   numvars = 1
-  sizeu = (1,)
+  sizeu = ()
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a number")
   end
   isinplace = false
   ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,f,g,analytic,knownanalytic,
@@ -153,7 +153,7 @@ end
 ``dx = a(r-x)dt + σ dW_t``
 
 """
-type OrnsteinUhlenbeckProblem
+type OrnsteinUhlenbeckProblem <: AbstractSDEProblem
   a
   r
   σ
@@ -179,9 +179,9 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u₀)
   knownanalytic = false
   analytic=(t,u,W)->0
   numvars = 1
-  sizeu = (1,)
+  sizeu = ()
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a number")
   end
   isinplace = false
   OrnsteinUhlenbeckProblem(a,r,σ,u₀,f,g,analytic,knownanalytic,
@@ -194,7 +194,7 @@ end
 ``dx = μ dt + σ dW_t``
 
 """
-type GeometricBrownianMotionProblem
+type GeometricBrownianMotionProblem <: AbstractSDEProblem
   μ
   σ
   u₀
@@ -219,9 +219,9 @@ function OrnsteinUhlenbeckProblem(μ,σ,u₀)
   knownanalytic = false
   analytic=(t,u,W)->0
   numvars = 1
-  sizeu = (1,)
+  sizeu = ()
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a number")
   end
   isinplace = false
   OrnsteinUhlenbeckProblem(a,r,σ,u₀,f,g,analytic,knownanalytic,
@@ -233,7 +233,7 @@ end
 ``dx = σ(t)e^{at} dW_t``
 
 """
-type MfStateProblem
+type MfStateProblem <: AbstractSDEProblem
   a
   σ
   u₀
@@ -258,9 +258,9 @@ function MfStateProblem(a,σ,u₀)
   knownanalytic = false
   analytic=(t,u,W)->0
   numvars = 1
-  sizeu = (1,)
+  sizeu = ()
   if size(u₀) != sizeu
-    err("Initial condtion must be a size 2 vector")
+    error("Initial condtion must be a number")
   end
   isinplace = false
   MfStateProblem(a,σ,u₀,f,g,analytic,knownanalytic,

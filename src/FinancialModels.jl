@@ -1,7 +1,6 @@
 module FinancialModels
-  using Reexport
-  @reexport using DifferentialEquations
-  import DifferentialEquations: solve
+  using DiffEqBase, StochasticDiffEq
+  import DiffEqBase: solve
 
   include("problems.jl")
 
