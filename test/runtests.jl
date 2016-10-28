@@ -1,4 +1,4 @@
-using FinancialModels, OrdinaryDiffEq
+using FinancialModels, StochasticDiffEq
 using Base.Test
 
 # write your own tests here
