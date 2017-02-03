@@ -3,24 +3,21 @@ dS = μSdt + \sqrt{v}SdW_1
 dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
 dW_1 dW_2 = ρ dt
 """
-type HestonProblem <: AbstractSDEProblem
-  μ
-  κ
-  Θ
-  σ
-  ρ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type HestonProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  μ::uType
+  κ::uType
+  Θ::uType
+  σ::uType
+  ρ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function HestonProblem(μ,κ,Θ,σ,ρ,u₀)
+function HestonProblem(μ,κ,Θ,σ,ρ,u₀,tspan)
   f = function (t,u,du)
     du[1] = μ*u[1]
     du[2] = κ*(Θ-u[2])
@@ -31,16 +28,8 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u₀)
   end
   Γ = [1 ρ;ρ 1] # Covariance Matrix
   noise = construct_correlated_noisefunc(Γ)
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 2
-  sizeu = (2,)
-  if size(u₀) != sizeu
-    error("Initial condtion must be a size 2 vector")
-  end
   isinplace = true
-  HestonProblem(μ,κ,Θ,σ,ρ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  HestonProblem(μ,κ,Θ,σ,ρ,u₀,tspan,f,g,isinplace,noise)
 end
 
 """
@@ -49,23 +38,20 @@ end
 
 Solves for ``log S(t)``.
 """
-type GeneralizedBlackScholesProblem <: AbstractSDEProblem
-  r
-  q
-  Θ
-  σ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  r::uType
+  q::uType
+  Θ::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀)
+function GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,tspan)
   f = function (t,u)
     r(t) - q(t) - Θ(t,exp(u))^2 / 2
   end
@@ -73,16 +59,8 @@ function GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀)
     σ
   end
   noise = WHITE_NOISE
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 1
-  sizeu = ()
-  if size(u₀) != sizeu
-    error("Initial condtion must be a number")
-  end
   isinplace = false
-  GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,tspan,f,g,isinplace,noise)
 end
 
 """
@@ -91,44 +69,42 @@ end
 
 Solves for ``log S(t)``.
 """
-type BlackScholesProblem <: AbstractSDEProblem
-  r
-  Θ
-  σ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type BlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  r::uType
+  Θ::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-BlackScholesProblem(r,Θ,σ,u₀) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u₀)
+BlackScholesProblem(r,Θ,σ,u₀,tspan) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u₀,tspan)
 
 """
 
 ``dx = a(b(t)-x)dt + σ dW_t``
 
 """
-type ExtendedOrnsteinUhlenbeckProblem <: AbstractSDEProblem
-  a
-  b
-  σ
-  u₀
-  f
-  g
+type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  a::uType
+  b::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   analytic::Function
   knownanalytic::Bool
   numvars::Int
   sizeu#::Tuple
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀)
+function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,tspan)
   f = function (t,u)
     a*(b(t)-u)
   end
@@ -136,16 +112,8 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀)
     σ
   end
   noise = WHITE_NOISE
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 1
-  sizeu = ()
-  if size(u₀) != sizeu
-    error("Initial condtion must be a number")
-  end
   isinplace = false
-  ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,tspan,f,g,isinplace,noise)
 end
 
 """
@@ -153,22 +121,19 @@ end
 ``dx = a(r-x)dt + σ dW_t``
 
 """
-type OrnsteinUhlenbeckProblem <: AbstractSDEProblem
-  a
-  r
-  σ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type OrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  a::uType
+  r::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function OrnsteinUhlenbeckProblem(a,r,σ,u₀)
+function OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan)
   f = function (t,u)
     a*(r-u)
   end
@@ -176,16 +141,8 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u₀)
     σ
   end
   noise = WHITE_NOISE
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 1
-  sizeu = ()
-  if size(u₀) != sizeu
-    error("Initial condtion must be a number")
-  end
   isinplace = false
-  OrnsteinUhlenbeckProblem(a,r,σ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan,f,g,isinplace,noise)
 end
 
 
@@ -194,21 +151,18 @@ end
 ``dx = μ dt + σ dW_t``
 
 """
-type GeometricBrownianMotionProblem <: AbstractSDEProblem
-  μ
-  σ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type GeometricBrownianMotionProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  μ::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function OrnsteinUhlenbeckProblem(μ,σ,u₀)
+function OrnsteinUhlenbeckProblem(μ,σ,u₀,tspan)
   f = function (t,u)
     μ
   end
@@ -216,16 +170,8 @@ function OrnsteinUhlenbeckProblem(μ,σ,u₀)
     σ
   end
   noise = WHITE_NOISE
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 1
-  sizeu = ()
-  if size(u₀) != sizeu
-    error("Initial condtion must be a number")
-  end
   isinplace = false
-  OrnsteinUhlenbeckProblem(a,r,σ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan,f,g,isinplace,noise)
 end
 
 """
@@ -233,21 +179,18 @@ end
 ``dx = σ(t)e^{at} dW_t``
 
 """
-type MfStateProblem <: AbstractSDEProblem
-  a
-  σ
-  u₀
-  f
-  g
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
+type MfStateProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  a::uType
+  σ::uType
+  u₀::uType
+  tspan::Tuple{tType,tType}
+  f::F
+  g::F2
   isinplace::Bool
-  noise::NoiseProcess
+  noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function MfStateProblem(a,σ,u₀)
+function MfStateProblem(a,σ,u₀,tspan)
   f = function (t,u)
     0
   end
@@ -255,14 +198,6 @@ function MfStateProblem(a,σ,u₀)
     σ(t)*exp(a*t)
   end
   noise = WHITE_NOISE
-  knownanalytic = false
-  analytic=(t,u,W)->0
-  numvars = 1
-  sizeu = ()
-  if size(u₀) != sizeu
-    error("Initial condtion must be a number")
-  end
   isinplace = false
-  MfStateProblem(a,σ,u₀,f,g,analytic,knownanalytic,
-                numvars,sizeu,isinplace,noise)
+  MfStateProblem(a,σ,u₀,tspan,f,g,isinplace,noise)
 end
