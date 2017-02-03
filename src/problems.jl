@@ -4,20 +4,19 @@ dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
 dW_1 dW_2 = ρ dt
 """
 type HestonProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  μ::uType
-  κ::uType
-  Θ::uType
-  σ::uType
-  ρ::uType
-  u₀::uType
+  μ::tType
+  κ::tType
+  Θ::tType
+  σ::tType
+  ρ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function HestonProblem(μ,κ,Θ,σ,ρ,u₀,tspan)
+function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan)
   f = function (t,u,du)
     du[1] = μ*u[1]
     du[2] = κ*(Θ-u[2])
@@ -29,7 +28,11 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u₀,tspan)
   Γ = [1 ρ;ρ 1] # Covariance Matrix
   noise = construct_correlated_noisefunc(Γ)
   isinplace = true
-  HestonProblem(μ,κ,Θ,σ,ρ,u₀,tspan,f,g,isinplace,noise)
+  HestonProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3]}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise)
 end
 
 """
@@ -38,29 +41,33 @@ end
 
 Solves for ``log S(t)``.
 """
-type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  r::uType
-  q::uType
-  Θ::uType
-  σ::uType
-  u₀::uType
+type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,thetaType,qType,rType} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+  r::rType
+  q::qType
+  Θ::thetaType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,tspan)
+function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)
   f = function (t,u)
     r(t) - q(t) - Θ(t,exp(u))^2 / 2
   end
   g = function (t,u)
     σ
   end
-  noise = WHITE_NOISE
+  noise = DiffEqBase.WHITE_NOISE
   isinplace = false
-  GeneralizedBlackScholesProblem(r,q,Θ,σ,u₀,tspan,f,g,isinplace,noise)
+  GeneralizedBlackScholesProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3],
+              typeof(Θ),typeof(q),typeof(r)}(r,q,Θ,σ,u0,tspan,f,g,noise)
 end
 
 """
@@ -70,18 +77,17 @@ end
 Solves for ``log S(t)``.
 """
 type BlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  r::uType
-  Θ::uType
-  σ::uType
-  u₀::uType
+  r::tType
+  Θ::tType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-BlackScholesProblem(r,Θ,σ,u₀,tspan) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u₀,tspan)
+BlackScholesProblem(r,Θ,σ,u0,tspan) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u0,tspan)
 
 """
 
@@ -89,22 +95,17 @@ BlackScholesProblem(r,Θ,σ,u₀,tspan) = GeneralizedBlackScholesProblem(r,(t)->
 
 """
 type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  a::uType
-  b::uType
-  σ::uType
-  u₀::uType
+  a::tType
+  b::tType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  analytic::Function
-  knownanalytic::Bool
-  numvars::Int
-  sizeu#::Tuple
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,tspan)
+function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan)
   f = function (t,u)
     a*(b(t)-u)
   end
@@ -113,7 +114,11 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,tspan)
   end
   noise = WHITE_NOISE
   isinplace = false
-  ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u₀,tspan,f,g,isinplace,noise)
+  ExtendedOrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3]}(a,b,σ,u0,tspan,f,g,noise)
 end
 
 """
@@ -122,18 +127,17 @@ end
 
 """
 type OrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  a::uType
-  r::uType
-  σ::uType
-  u₀::uType
+  a::tType
+  r::tType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan)
+function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan)
   f = function (t,u)
     a*(r-u)
   end
@@ -142,7 +146,11 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan)
   end
   noise = WHITE_NOISE
   isinplace = false
-  OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan,f,g,isinplace,noise)
+  OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3]}(a,r,σ,u0,tspan,f,g,noise)
 end
 
 
@@ -152,17 +160,16 @@ end
 
 """
 type GeometricBrownianMotionProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  μ::uType
-  σ::uType
-  u₀::uType
+  μ::tType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function OrnsteinUhlenbeckProblem(μ,σ,u₀,tspan)
+function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan)
   f = function (t,u)
     μ
   end
@@ -171,7 +178,11 @@ function OrnsteinUhlenbeckProblem(μ,σ,u₀,tspan)
   end
   noise = WHITE_NOISE
   isinplace = false
-  OrnsteinUhlenbeckProblem(a,r,σ,u₀,tspan,f,g,isinplace,noise)
+  OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3]}(a,r,σ,u0,tspan,f,g,noise)
 end
 
 """
@@ -180,17 +191,16 @@ end
 
 """
 type MfStateProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
-  a::uType
-  σ::uType
-  u₀::uType
+  a::tType
+  σ::tType
+  u0::uType
   tspan::Tuple{tType,tType}
   f::F
   g::F2
-  isinplace::Bool
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
 end
 
-function MfStateProblem(a,σ,u₀,tspan)
+function MfStateProblem(a,σ,u0,tspan)
   f = function (t,u)
     0
   end
@@ -199,5 +209,9 @@ function MfStateProblem(a,σ,u₀,tspan)
   end
   noise = WHITE_NOISE
   isinplace = false
-  MfStateProblem(a,σ,u₀,tspan,f,g,isinplace,noise)
+  MfStateProblem{typeof(u0),eltype(tspan),isinplace,
+              typeof(noise).parameters[2],
+              typeof(noise).parameters[1],
+              typeof(f),typeof(g),
+              typeof(noise).parameters[3]}(a,σ,u0,tspan,f,g,noise)
 end
