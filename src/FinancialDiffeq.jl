@@ -1,4 +1,4 @@
-module FinancialModels
+module FinancialDiffeq
   using DiffEqBase, StochasticDiffEq
   import DiffEqBase: solve
 
