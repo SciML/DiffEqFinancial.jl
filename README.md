@@ -19,7 +19,7 @@ plot(sol)
 ```
 
 Full documentation is in the
-[DifferentialEquations.jl models documentation](http://docs.juliadiffeq.org/latest/)
+[DifferentialEquations.jl models documentation](http://docs.juliadiffeq.org/latest/models/financial.html)
 
 These solvers use DifferentialEquations.jl, meaning that high-performance and
 high order algorithms are available.
