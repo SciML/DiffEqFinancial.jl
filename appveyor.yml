@@ -31,7 +31,7 @@ build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
   - C:\projects\julia\bin\julia -e "versioninfo();
-      Pkg.clone(pwd(), \"FinancialDiffEq\"); Pkg.build(\"FinancialDiffEq\")"
+      Pkg.clone(pwd(), \"DiffEqFinancial\"); Pkg.build(\"DiffEqFinancial\")"
 
 test_script:
-  - C:\projects\julia\bin\julia -e "Pkg.test(\"FinancialDiffEq\")"
+  - C:\projects\julia\bin\julia -e "Pkg.test(\"DiffEqFinancial\")"
