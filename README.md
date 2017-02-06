@@ -18,7 +18,8 @@ sol = solve(prob)
 plot(sol)
 ```
 
-Full documentation coming soon.
+Full documentation is in the
+[DifferentialEquations.jl models documentation](http://docs.juliadiffeq.org/latest/)
 
 These solvers use DifferentialEquations.jl, meaning that high-performance and
 high order algorithms are available.
