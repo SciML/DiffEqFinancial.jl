@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/JuliaDiffEq/Lobby](https://badges.gitter.im/JuliaDiffEq/Lobby.svg)](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/JuliaDiffEq/DiffEqFinancial.jl.svg?branch=master)](https://travis-ci.org/JuliaDiffEq/DiffEqFinancial.jl)
-[![Build status](https://ci.appveyor.com/api/projects/status/42tnad82igd599v6?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqfinancial-jl)
+[![Build status](https://ci.appveyor.com/api/projects/status/a5ynd3ypb3tejqa2?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqfinancial-jl)
 [![Coverage Status](https://coveralls.io/repos/github/JuliaDiffEq/FinancialModels.jl/badge.svg)](https://coveralls.io/github/JuliaDiffEq/DiffEqFinancial.jl)
 [![codecov](https://codecov.io/gh/JuliaDiffEq/FinancialModels.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaDiffEq/DiffEqFinancial.jl)
 
