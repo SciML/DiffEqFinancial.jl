@@ -1,3 +1,5 @@
+__precompile__()
+
 module DiffEqFinancial
   using DiffEqBase, StochasticDiffEq
   import DiffEqBase: solve
