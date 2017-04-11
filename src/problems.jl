@@ -3,7 +3,7 @@ dS = μSdt + \sqrt{v}SdW_1
 dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
 dW_1 dW_2 = ρ dt
 """
-type HestonProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type HestonProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   μ::tType
   κ::tType
   Θ::tType
@@ -14,9 +14,11 @@ type HestonProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: A
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan)
+function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u,du)
     du[1] = μ*u[1]
     du[2] = κ*(Θ-u[2])
@@ -32,7 +34,8 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan)
               typeof(noise).parameters[2],
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
-              typeof(noise).parameters[3]}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise)
+              typeof(noise).parameters[3]
+              ,typeof(callback),typeof(noise_rate_prototype)}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
 
 """
@@ -41,7 +44,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,thetaType,qType,rType} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,thetaType,qType,rType,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   r::rType
   q::qType
   Θ::thetaType
@@ -51,9 +54,11 @@ type GeneralizedBlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseCl
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)
+function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u)
     r(t) - q(t) - Θ(t,exp(u))^2 / 2
   end
@@ -67,7 +72,8 @@ function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan)
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
               typeof(noise).parameters[3],
-              typeof(Θ),typeof(q),typeof(r)}(r,q,Θ,σ,u0,tspan,f,g,noise)
+              typeof(Θ),typeof(q),typeof(r),
+              typeof(callback),typeof(noise_rate_prototype)}(r,q,Θ,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
 
 """
@@ -76,7 +82,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type BlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type BlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   r::tType
   Θ::tType
   σ::tType
@@ -85,16 +91,21 @@ type BlackScholesProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-BlackScholesProblem(r,Θ,σ,u0,tspan) = GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u0,tspan)
+BlackScholesProblem(r,Θ,σ,u0,tspan;callback = CallbackSet(),
+                    noise_rate_prototype = nothing) =
+                    GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u0,tspan,
+                                                  callback=callback,noise_rate_prototype=noise_rate_prototype)
 
 """
 
 ``dx = a(b(t)-x)dt + σ dW_t``
 
 """
-type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   a::tType
   b::tType
   σ::tType
@@ -103,9 +114,11 @@ type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,Noise
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan)
+function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u)
     a*(b(t)-u)
   end
@@ -118,7 +131,8 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan)
               typeof(noise).parameters[2],
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
-              typeof(noise).parameters[3]}(a,b,σ,u0,tspan,f,g,noise)
+              typeof(noise).parameters[3],
+              typeof(callback),typeof(noise_rate_prototype)}(a,b,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
 
 """
@@ -126,7 +140,7 @@ end
 ``dx = a(r-x)dt + σ dW_t``
 
 """
-type OrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type OrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   a::tType
   r::tType
   σ::tType
@@ -135,9 +149,11 @@ type OrnsteinUhlenbeckProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan)
+function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u)
     a*(r-u)
   end
@@ -150,7 +166,8 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan)
               typeof(noise).parameters[2],
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
-              typeof(noise).parameters[3]}(a,r,σ,u0,tspan,f,g,noise)
+              typeof(noise).parameters[3],
+              typeof(callback),typeof(noise_rate_prototype)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
 
 
@@ -159,7 +176,7 @@ end
 ``dx = μ dt + σ dW_t``
 
 """
-type GeometricBrownianMotionProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type GeometricBrownianMotionProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   μ::tType
   σ::tType
   u0::uType
@@ -167,9 +184,11 @@ type GeometricBrownianMotionProblem{uType,tType,isinplace,isinplaceNoise,NoiseCl
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan)
+function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u)
     μ
   end
@@ -182,7 +201,8 @@ function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan)
               typeof(noise).parameters[2],
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
-              typeof(noise).parameters[3]}(a,r,σ,u0,tspan,f,g,noise)
+              typeof(noise).parameters[3],
+              typeof(callback),typeof(noise_rate_prototype)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
 
 """
@@ -190,7 +210,7 @@ end
 ``dx = σ(t)e^{at} dW_t``
 
 """
-type MfStateProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,F,F2,F3}
+type MfStateProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3,C,ND} <: AbstractSDEProblem{uType,tType,isinplace,NoiseClass,ND}
   a::tType
   σ::tType
   u0::uType
@@ -198,9 +218,11 @@ type MfStateProblem{uType,tType,isinplace,isinplaceNoise,NoiseClass,F,F2,F3} <: 
   f::F
   g::F2
   noise::NoiseProcess{NoiseClass,isinplaceNoise,F3}
+  callback::C
+  noise_rate_prototype::ND
 end
 
-function MfStateProblem(a,σ,u0,tspan)
+function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
   f = function (t,u)
     0
   end
@@ -213,5 +235,6 @@ function MfStateProblem(a,σ,u0,tspan)
               typeof(noise).parameters[2],
               typeof(noise).parameters[1],
               typeof(f),typeof(g),
-              typeof(noise).parameters[3]}(a,σ,u0,tspan,f,g,noise)
+              typeof(noise).parameters[3],typeof(callback),typeof(noise_rate_prototype)
+              }(a,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype)
 end
