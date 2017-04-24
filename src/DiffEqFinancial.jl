@@ -1,7 +1,7 @@
 __precompile__()
 
 module DiffEqFinancial
-  using DiffEqBase, StochasticDiffEq
+  using DiffEqBase, DiffEqNoiseProcess 
   import DiffEqBase: solve
 
   include("problems.jl")
