@@ -17,9 +17,10 @@ type HestonProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet())
+function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
   f = function (t,u,du)
     du[1] = μ*u[1]
     du[2] = κ*(Θ-u[2])
@@ -31,13 +32,16 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet())
   Γ = [1 ρ;ρ 1] # Covariance Matrix
   mass_matrix=I
   noise_rate_prototype = nothing
-  noise = CorrelatedWienerProcess!(Γ,tspan[1],zeros(2),zeros(2))
+  if seed == 0
+    seed = rand(UInt64)
+  end
+  noise = CorrelatedWienerProcess!(Γ,tspan[1],zeros(2),zeros(2),rng = Xorshifts.Xoroshiro128Plus(seed))
   isinplace = true
   HestonProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),
-              typeof(mass_matrix)}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              typeof(mass_matrix)}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -59,9 +63,10 @@ type GeneralizedBlackScholesProblem{uType,tType,isinplace,NP,F,F2,thetaType,qTyp
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSet())
+function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
   f = function (t,u)
     r(t) - q(t) - Θ(t,exp(u))^2 / 2
   end
@@ -76,7 +81,7 @@ function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSe
               typeof(noise),
               typeof(f),typeof(g),
               typeof(Θ),typeof(q),typeof(r),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(r,q,Θ,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(r,q,Θ,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -97,11 +102,12 @@ type BlackScholesProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEPr
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
 BlackScholesProblem(r,Θ,σ,u0,tspan;callback = CallbackSet(),
-                    noise_rate_prototype = nothing) =
-                    GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u0,tspan,callback=callback)
+                    noise_rate_prototype = nothing,seed=UInt64(0)) =
+                    GeneralizedBlackScholesProblem(r,(t)->0,Θ,σ,u0,tspan,callback=callback,seed=seed)
 
 """
 
@@ -120,9 +126,10 @@ type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: 
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet())
+function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
   f = function (t,u)
     a*(b(t)-u)
   end
@@ -136,7 +143,7 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet
   ExtendedOrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,b,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,b,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -156,9 +163,10 @@ type OrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: Abstract
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet())
+function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
   f = function (t,u)
     a*(r-u)
   end
@@ -172,7 +180,7 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet())
   OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 
@@ -192,9 +200,10 @@ type GeometricBrownianMotionProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: Ab
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet())
+function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
   f = function (t,u)
     μ
   end
@@ -208,7 +217,7 @@ function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet())
   OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -227,9 +236,10 @@ type MfStateProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem
   callback::C
   noise_rate_prototype::ND
   mass_matrix::MM
+  seed::UInt64
 end
 
-function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing)
+function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing,seed=UInt64(0))
   f = function (t,u)
     0
   end
@@ -243,5 +253,5 @@ function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_protot
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(
-              a,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix)
+              a,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
