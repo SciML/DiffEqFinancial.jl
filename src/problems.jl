@@ -3,7 +3,7 @@ dS = μSdt + \sqrt{v}SdW_1
 dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
 dW_1 dW_2 = ρ dt
 """
-type HestonProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct HestonProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   μ::tType
   κ::tType
   Θ::tType
@@ -50,7 +50,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type GeneralizedBlackScholesProblem{uType,tType,isinplace,NP,F,F2,thetaType,qType,rType,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct GeneralizedBlackScholesProblem{uType,tType,isinplace,NP,F,F2,thetaType,qType,rType,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   r::rType
   q::qType
   Θ::thetaType
@@ -90,7 +90,7 @@ end
 
 Solves for ``log S(t)``.
 """
-type BlackScholesProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct BlackScholesProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   r::tType
   Θ::tType
   σ::tType
@@ -114,7 +114,7 @@ BlackScholesProblem(r,Θ,σ,u0,tspan;callback = CallbackSet(),
 ``dx = a(b(t)-x)dt + σ dW_t``
 
 """
-type ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   a::tType
   b::tType
   σ::tType
@@ -151,7 +151,7 @@ end
 ``dx = a(r-x)dt + σ dW_t``
 
 """
-type OrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct OrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   a::tType
   r::tType
   σ::tType
@@ -189,7 +189,7 @@ end
 ``dx = μ dt + σ dW_t``
 
 """
-type GeometricBrownianMotionProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct GeometricBrownianMotionProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   μ::tType
   σ::tType
   u0::uType
@@ -225,7 +225,7 @@ end
 ``dx = σ(t)e^{at} dW_t``
 
 """
-type MfStateProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
+mutable struct MfStateProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractSDEProblem{uType,tType,isinplace,ND}
   a::tType
   σ::tType
   u0::uType
