@@ -1,8 +1,11 @@
 __precompile__()
 
 module DiffEqFinancial
-  using DiffEqBase, DiffEqNoiseProcess 
+  using DiffEqBase, DiffEqNoiseProcess
   import DiffEqBase: solve
+
+  import RandomNumbers: Xorshifts
+
 
   include("problems.jl")
 
