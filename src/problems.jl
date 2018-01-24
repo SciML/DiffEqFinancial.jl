@@ -11,6 +11,7 @@ mutable struct HestonProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractS
   ρ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -21,11 +22,11 @@ mutable struct HestonProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: AbstractS
 end
 
 function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
-  f = function (t,u,du)
+  f = function (du,u,p,t)
     du[1] = μ*u[1]
     du[2] = κ*(Θ-u[2])
   end
-  g = function (t,u,du)
+  g = function (du,u,p,t)
     du[1] = √u[2]*u[1]
     du[2] = Θ*√u[2]
   end
@@ -41,7 +42,8 @@ function HestonProblem(μ,κ,Θ,σ,ρ,u0,tspan;callback = CallbackSet(),seed=UIn
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),
-              typeof(mass_matrix)}(μ,κ,Θ,σ,ρ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              typeof(mass_matrix)}(μ,κ,Θ,σ,ρ,u0,tspan,nothing,
+              f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -57,6 +59,7 @@ mutable struct GeneralizedBlackScholesProblem{uType,tType,isinplace,NP,F,F2,thet
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -67,10 +70,10 @@ mutable struct GeneralizedBlackScholesProblem{uType,tType,isinplace,NP,F,F2,thet
 end
 
 function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
-  f = function (t,u)
+  f = function (u,p,t)
     r(t) - q(t) - Θ(t,exp(u))^2 / 2
   end
-  g = function (t,u)
+  g = function (u,p,t)
     σ
   end
   noise_rate_prototype = nothing
@@ -81,7 +84,9 @@ function GeneralizedBlackScholesProblem(r,q,Θ,σ,u0,tspan;callback = CallbackSe
               typeof(noise),
               typeof(f),typeof(g),
               typeof(Θ),typeof(q),typeof(r),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(r,q,Θ,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(
+              r,q,Θ,σ,u0,tspan,nothing,f,g,noise,callback,
+              noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -96,6 +101,7 @@ mutable struct BlackScholesProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: Abs
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -120,6 +126,7 @@ mutable struct ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -130,10 +137,10 @@ mutable struct ExtendedOrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,
 end
 
 function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
-  f = function (t,u)
+  f = function (u,p,t)
     a*(b(t)-u)
   end
-  g = function (t,u)
+  g = function (u,p,t)
     σ
   end
   noise_rate_prototype = nothing
@@ -143,7 +150,9 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet
   ExtendedOrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,b,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              typeof(callback),typeof(noise_rate_prototype),
+              typeof(mass_matrix)}(a,b,σ,u0,tspan,p,f,g,noise,
+              callback,noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -157,6 +166,7 @@ mutable struct OrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -167,10 +177,10 @@ mutable struct OrnsteinUhlenbeckProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <
 end
 
 function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
-  f = function (t,u)
+  f = function (u,p,t)
     a*(r-u)
   end
-  g = function (t,u)
+  g = function (u,p,t)
     σ
   end
   noise = nothing
@@ -180,7 +190,9 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet(),seed=
   OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              typeof(callback),typeof(noise_rate_prototype),
+              typeof(mass_matrix)}(a,r,σ,u0,tspan,p,f,g,noise,callback,
+              noise_rate_prototype,mass_matrix,seed)
 end
 
 
@@ -194,6 +206,7 @@ mutable struct GeometricBrownianMotionProblem{uType,tType,isinplace,NP,F,F2,C,ND
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -204,10 +217,10 @@ mutable struct GeometricBrownianMotionProblem{uType,tType,isinplace,NP,F,F2,C,ND
 end
 
 function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet(),seed=UInt64(0))
-  f = function (t,u)
+  f = function (u,p,t)
     μ
   end
-  g = function (t,u)
+  g = function (u,p,t)
     σ
   end
   noise = nothing
@@ -217,7 +230,9 @@ function OrnsteinUhlenbeckProblem(μ,σ,u0,tspan;callback = CallbackSet(),seed=U
   OrnsteinUhlenbeckProblem{typeof(u0),eltype(tspan),isinplace,
               typeof(noise),
               typeof(f),typeof(g),
-              typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(a,r,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              typeof(callback),typeof(noise_rate_prototype),
+              typeof(mass_matrix)}(a,r,σ,u0,tspan,nothing,f,g,noise,callback,
+              noise_rate_prototype,mass_matrix,seed)
 end
 
 """
@@ -230,6 +245,7 @@ mutable struct MfStateProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: Abstract
   σ::tType
   u0::uType
   tspan::Tuple{tType,tType}
+  p::Void
   f::F
   g::F2
   noise::NP
@@ -240,10 +256,10 @@ mutable struct MfStateProblem{uType,tType,isinplace,NP,F,F2,C,ND,MM} <: Abstract
 end
 
 function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_prototype = nothing,seed=UInt64(0))
-  f = function (t,u)
+  f = function (u,p,t)
     0
   end
-  g = function (t,u)
+  g = function (u,p,t)
     σ(t)*exp(a*t)
   end
   noise = nothing
@@ -253,5 +269,6 @@ function MfStateProblem(a,σ,u0,tspan;callback = CallbackSet(),noise_rate_protot
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),typeof(mass_matrix)}(
-              a,σ,u0,tspan,f,g,noise,callback,noise_rate_prototype,mass_matrix,seed)
+              a,σ,u0,tspan,nothing,f,g,noise,callback,
+              noise_rate_prototype,mass_matrix,seed)
 end
