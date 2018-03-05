@@ -151,7 +151,7 @@ function ExtendedOrnsteinUhlenbeckProblem(a,b,σ,u0,tspan;callback = CallbackSet
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),
-              typeof(mass_matrix)}(a,b,σ,u0,tspan,p,f,g,noise,
+              typeof(mass_matrix)}(a,b,σ,u0,tspan,nothing,f,g,noise,
               callback,noise_rate_prototype,mass_matrix,seed)
 end
 
@@ -191,7 +191,7 @@ function OrnsteinUhlenbeckProblem(a,r,σ,u0,tspan;callback = CallbackSet(),seed=
               typeof(noise),
               typeof(f),typeof(g),
               typeof(callback),typeof(noise_rate_prototype),
-              typeof(mass_matrix)}(a,r,σ,u0,tspan,p,f,g,noise,callback,
+              typeof(mass_matrix)}(a,r,σ,u0,tspan,nothing,f,g,noise,callback,
               noise_rate_prototype,mass_matrix,seed)
 end
 
