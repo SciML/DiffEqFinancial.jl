@@ -1,5 +1,5 @@
 using DiffEqFinancial, StochasticDiffEq
-using Base.Test
+using Test
 
 # write your own tests here
 u0 = [1.;0.5]
