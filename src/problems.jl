@@ -15,7 +15,7 @@ mutable struct HestonProblem{uType,tType,tupType,isinplace,NP,F,F2,C,ND,MM} <: D
   ρ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -63,7 +63,7 @@ mutable struct GeneralizedBlackScholesProblem{uType,tType,tupType,isinplace,NP,F
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -105,7 +105,7 @@ mutable struct BlackScholesProblem{uType,tType,tupType,isinplace,NP,F,F2,C,ND,MM
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -130,7 +130,7 @@ mutable struct ExtendedOrnsteinUhlenbeckProblem{uType,tType,tupType,isinplace,NP
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -170,7 +170,7 @@ mutable struct OrnsteinUhlenbeckProblem{uType,tType,tupType,isinplace,NP,F,F2,C,
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -210,7 +210,7 @@ mutable struct GeometricBrownianMotionProblem{uType,tType,tupType,isinplace,NP,F
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
@@ -249,7 +249,7 @@ mutable struct MfStateProblem{uType,tType,tupType,isinplace,NP,F,F2,C,ND,MM} <: 
   σ::tType
   u0::uType
   tspan::tupType
-  p::Void
+  p::Nothing
   f::F
   g::F2
   noise::NP
