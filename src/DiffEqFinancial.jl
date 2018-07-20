@@ -1,7 +1,7 @@
 __precompile__()
 
 module DiffEqFinancial
-  using DiffEqBase, DiffEqNoiseProcess, Markdown
+  using DiffEqBase, DiffEqNoiseProcess, Markdown, LinearAlgebra
 
   import RandomNumbers: Xorshifts
 
