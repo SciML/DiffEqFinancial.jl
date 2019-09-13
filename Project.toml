@@ -1,7 +1,7 @@
 name = "DiffEqFinancial"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 authors = ["Chris Rackauckas <accounts@chrisrackauckas.com>"]
-version = "v2.2.0"
+version = "v2.2.1"
 
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
