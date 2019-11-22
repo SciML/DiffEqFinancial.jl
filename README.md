@@ -5,8 +5,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/a5ynd3ypb3tejqa2?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqfinancial-jl)
 [![Coverage Status](https://coveralls.io/repos/github/JuliaDiffEq/FinancialModels.jl/badge.svg)](https://coveralls.io/github/JuliaDiffEq/DiffEqFinancial.jl)
 [![codecov](https://codecov.io/gh/JuliaDiffEq/FinancialModels.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaDiffEq/DiffEqFinancial.jl)
-[![DiffEqFinancial](http://pkg.julialang.org/badges/DiffEqFinancial_0.5.svg)](http://pkg.julialang.org/?pkg=DiffEqFinancial)
-[![DiffEqFinancial](http://pkg.julialang.org/badges/DiffEqFinancial_0.6.svg)](http://pkg.julialang.org/?pkg=DiffEqFinancial)
 
 This repository holds problem definitions for common financial models for use in
 the DifferentialEquations ecosystem. The goal is to be a feature-complete set of
@@ -21,7 +19,7 @@ plot(sol)
 ```
 
 Full documentation is in the
-[DifferentialEquations.jl models documentation](http://docs.juliadiffeq.org/latest/models/financial.html)
+[DifferentialEquations.jl models documentation](http://docs.juliadiffeq.org/dev/models/financial.html)
 
 These solvers use DifferentialEquations.jl, meaning that high-performance and
 high order algorithms are available.
