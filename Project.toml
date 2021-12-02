@@ -14,7 +14,7 @@ RandomNumbers = "e6cf234a-135c-5ec9-84dd-332b85af5143"
 DiffEqBase = "6"
 DiffEqNoiseProcess = "3, 4.1, 5.0"
 RandomNumbers = "1"
-julia = "1"
+julia = "1.6"
 
 [extras]
 StochasticDiffEq = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
