@@ -14,7 +14,7 @@ function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), kwargs..
     end
     g = function (du, u, p, t)
         du[1] = √u[2] * u[1]
-        du[2] = Θ * √u[2]
+        du[2] = σ * √u[2]
     end
     Γ = [1 ρ; ρ 1] # Covariance Matrix
     noise_rate_prototype = nothing
