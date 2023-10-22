@@ -19,7 +19,7 @@ days = 252
 dt = 1/days
 
 prob = GeometricBrownianMotionProblem(r, sigma, S0, (t,T))
-sol = solve(prob;dt=dt)
+sol = solve(prob,EM();dt=dt)
 monte_prob = EnsembleProblem(prob)
 sol = solve(monte_prob, EM(); dt=dt,trajectories=1000000)
 us=[sol[i].u for i in eachindex(sol)]
