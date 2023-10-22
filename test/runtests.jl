@@ -5,7 +5,7 @@ using Test
 u0 = [1.0; 0.5]
 σ = 0.25
 prob = HestonProblem(1.0, 1.0, σ, 1.0, 1.0, u0, (0.0, 1.0))
-sol = solve(prob, SRIW1(), adaptive = false, dt = 1 / 10)
+sol = solve(prob, SRIW1(), adaptive = false, dt = 1 / 100)
 
 prob = BlackScholesProblem((t) -> t^2, (t, u) -> 1.0, σ, 0.5, (0.0, 1.0))
 sol = solve(prob, SRIW1())
