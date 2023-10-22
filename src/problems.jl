@@ -107,15 +107,15 @@ end
 
 @doc doc"""
 
-``dx = μ dt + σ dW_t``
+``dx = μx dt + σx dW_t``
 
 """
 function GeometricBrownianMotionProblem(μ, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        μ
+        μ * u
     end
     g = function (u, p, t)
-        σ
+        σ * u
     end
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
