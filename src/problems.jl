@@ -26,7 +26,7 @@ function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), kwargs..
                                      rng = Xorshifts.Xoroshiro128Plus(seed))
 
     sde_f = SDEFunction{true}(f, g)
-    SDEProblem(sde_f, g, u0, tspan, noise = noise, seed = seed, kwargs...)
+    SDEProblem(sde_f, u0, tspan, noise = noise, seed = seed, kwargs...)
 end
 
 @doc doc"""
@@ -107,15 +107,15 @@ end
 
 @doc doc"""
 
-``dx = μ dt + σ dW_t``
+``dx = μx dt + σx dW_t``
 
 """
 function GeometricBrownianMotionProblem(μ, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        μ
+        μ * u
     end
     g = function (u, p, t)
-        σ
+        σ * u
     end
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
