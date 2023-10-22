@@ -26,7 +26,7 @@ function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), kwargs..
                                      rng = Xorshifts.Xoroshiro128Plus(seed))
 
     sde_f = SDEFunction{true}(f, g)
-    SDEProblem(sde_f, g, u0, tspan, noise = noise, seed = seed, kwargs...)
+    SDEProblem(sde_f, u0, tspan, noise = noise, seed = seed, kwargs...)
 end
 
 @doc doc"""

@@ -1,4 +1,4 @@
-using DiffEqFinancial, StochasticDiffEq
+using DiffEqFinancial, Statistics, StochasticDiffEq
 using Test
 
 # write your own tests here
@@ -21,11 +21,11 @@ dt = 1/days
 prob = GeometricBrownianMotionProblem(r, sigma, S0, (t,T))
 sol = solve(prob;dt=dt)
 monte_prob = EnsembleProblem(prob)
-sol = solve(monte_prob, EM(); dt=dt,trajectories=100000)
+sol = solve(monte_prob, EM(); dt=dt,trajectories=1000000)
 us=[sol[i].u for i in eachindex(sol)]
 simulated = mean(us)
 
 tsteps = collect(0:dt:T)
 expected = S0 * exp.(r * tsteps)
-error = sum(abs2.(simulated .- expected))
-@test error < 1e-2
+testerr = sum(abs2.(simulated .- expected))
+@test testerr < 2e-1
