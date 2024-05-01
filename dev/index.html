@@ -4,8 +4,8 @@ sol = solve(prob)
 plot(sol)</code></pre><p>Full documentation is in the <a href="https://docs.sciml.ai/DiffEqDocs/stable/">DifferentialEquations.jl models documentation</a></p><p>These solvers use DifferentialEquations.jl, meaning that high-performance and high order algorithms are available.</p><p>The project is looking for contributors who would like to implement more models. If you&#39;re interested and need help getting started, talk to Chris Rackauckas in the <a href="https://gitter.im/JuliaDiffEq/Lobby">Gitter chat</a>.</p><h2 id="Contributing"><a class="docs-heading-anchor" href="#Contributing">Contributing</a><a id="Contributing-1"></a><a class="docs-heading-anchor-permalink" href="#Contributing" title="Permalink"></a></h2><ul><li>Please refer to the <a href="https://github.com/SciML/ColPrac/blob/master/README.md">SciML ColPrac: Contributor&#39;s Guide on Collaborative Practices for Community Packages</a> for guidance on PRs, issues, and other matters relating to contributing to SciML.</li><li>See the <a href="https://github.com/SciML/SciMLStyle">SciML Style Guide</a> for common coding practices and other style decisions.</li><li>There are a few community forums:<ul><li>The #diffeq-bridged and #sciml-bridged channels in the <a href="https://julialang.org/slack/">Julia Slack</a></li><li>The #diffeq-bridged and #sciml-bridged channels in the <a href="https://julialang.zulipchat.com/#narrow/stream/279055-sciml-bridged">Julia Zulip</a></li><li>On the <a href="https://discourse.julialang.org">Julia Discourse forums</a></li><li>See also <a href="https://sciml.ai/community/">SciML Community page</a></li></ul></li></ul><h2 id="Reproducibility"><a class="docs-heading-anchor" href="#Reproducibility">Reproducibility</a><a id="Reproducibility-1"></a><a class="docs-heading-anchor-permalink" href="#Reproducibility" title="Permalink"></a></h2><details><summary>The documentation of this SciML package was built using these direct dependencies,</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `~/work/DiffEqFinancial.jl/DiffEqFinancial.jl/docs/Project.toml`
   [5a0ffddc] DiffEqFinancial v2.6.0 `~/work/DiffEqFinancial.jl/DiffEqFinancial.jl`
 ⌅ [e30172f5] Documenter v0.27.25
-Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`</code></pre></details><details><summary>and using this machine and Julia version.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Julia Version 1.10.1
-Commit 7790d6f0641 (2024-02-13 20:41 UTC)
+Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated`</code></pre></details><details><summary>and using this machine and Julia version.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Julia Version 1.10.3
+Commit 0b4590a5507 (2024-04-30 10:59 UTC)
 Build Info:
   Official https://julialang.org/ release
 Platform Info:
@@ -15,40 +15,42 @@ Platform Info:
   LIBM: libopenlibm
   LLVM: libLLVM-15.0.7 (ORCJIT, znver3)
 Threads: 1 default, 0 interactive, 1 GC (on 4 virtual cores)</code></pre></details><details><summary>A more complete overview of all dependencies and their versions is also provided.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `~/work/DiffEqFinancial.jl/DiffEqFinancial.jl/docs/Manifest.toml`
-  [47edcb42] ADTypes v0.2.6
+  [47edcb42] ADTypes v1.0.0
   [a4c015fc] ANSIColoredPrinters v0.0.1
-  [79e6a3ab] Adapt v4.0.1
-  [4fba245c] ArrayInterface v7.7.0
-  [6e4b80f9] BenchmarkTools v1.4.0
+  [7d9f7c33] Accessors v0.1.36
+  [79e6a3ab] Adapt v4.0.4
+  [66dad0bd] AliasTables v1.1.1
+  [4fba245c] ArrayInterface v7.10.0
   [62783981] BitTwiddlingConvenienceFunctions v0.1.5
   [2a0fbf3d] CPUSummary v0.2.4
   [49dc2e85] Calculus v0.5.1
   [fb6a15b2] CloseOpenIntervals v0.1.12
-  [523fee87] CodecBzip2 v0.8.2
-  [944b1d66] CodecZlib v0.7.4
   [38540f10] CommonSolve v0.2.4
   [bbf7d656] CommonSubexpressions v0.3.0
-  [34da2185] Compat v4.12.0
-  [187b0558] ConstructionBase v1.5.4
+  [34da2185] Compat v4.14.0
+  [a33af91c] CompositionsBase v0.1.2
+  [2569d6c7] ConcreteStructs v0.2.3
+  [187b0558] ConstructionBase v1.5.5
   [adafc99b] CpuId v0.3.1
   [9a962f9c] DataAPI v1.16.0
-  [864edb3b] DataStructures v0.18.16
+  [864edb3b] DataStructures v0.18.20
   [e2d170a0] DataValueInterfaces v1.0.0
-  [2b5f629d] DiffEqBase v6.147.0
+  [2b5f629d] DiffEqBase v6.149.1
   [5a0ffddc] DiffEqFinancial v2.6.0 `~/work/DiffEqFinancial.jl/DiffEqFinancial.jl`
-  [77a26b50] DiffEqNoiseProcess v5.20.1
+  [77a26b50] DiffEqNoiseProcess v5.21.0
   [163ba53b] DiffResults v1.1.0
   [b552c78f] DiffRules v1.15.1
-  [31c24e10] Distributions v0.25.107
+  [31c24e10] Distributions v0.25.108
   [ffbed154] DocStringExtensions v0.9.3
 ⌅ [e30172f5] Documenter v0.27.25
   [fa6b7ba4] DualNumbers v0.6.8
   [4e289a0a] EnumX v1.0.4
-  [f151be2c] EnzymeCore v0.6.5
+  [f151be2c] EnzymeCore v0.7.2
   [e2ba6199] ExprTools v0.1.10
   [7034ab61] FastBroadcast v0.2.8
-  [1a297f60] FillArrays v1.9.3
-  [6a86dc24] FiniteDiff v2.22.0
+  [9aa1b823] FastClosures v0.3.2
+  [1a297f60] FillArrays v1.10.2
+  [6a86dc24] FiniteDiff v2.23.1
   [f6369f11] ForwardDiff v0.10.36
   [069b7b12] FunctionWrappers v1.1.3
   [77dc65aa] FunctionWrappersWrappers v0.1.3
@@ -56,67 +58,64 @@ Threads: 1 default, 0 interactive, 1 GC (on 4 virtual cores)</code></pre></detai
   [34004b35] HypergeometricFunctions v0.3.23
   [b5f81e59] IOCapture v0.2.4
   [615f187c] IfElse v0.1.1
+  [3587e190] InverseFunctions v0.1.14
   [92d709cd] IrrationalConstants v0.2.2
   [82899510] IteratorInterfaceExtensions v1.0.0
   [692b3bcd] JLLWrappers v1.5.0
   [682c06a0] JSON v0.21.4
   [10f19ff3] LayoutPointers v0.1.15
-  [50d2b5c4] Lazy v0.15.1
   [d3d80556] LineSearches v7.2.0
-  [2ab3a3ac] LogExpFunctions v0.3.26
+  [2ab3a3ac] LogExpFunctions v0.3.27
   [1914dd2f] MacroTools v0.5.13
   [d125e4d3] ManualMemory v0.1.8
-  [b8f27783] MathOptInterface v1.25.2
-  [e1d29d7a] Missings v1.1.0
+  [e1d29d7a] Missings v1.2.0
   [46d2c3a1] MuladdMacro v0.2.4
-  [d8a4904e] MutableArithmetics v1.4.1
   [d41bc354] NLSolversBase v7.8.3
   [77ba4419] NaNMath v1.0.2
-  [429524aa] Optim v1.9.2
+  [429524aa] Optim v1.9.4
   [bac558e1] OrderedCollections v1.6.3
   [90014a1f] PDMats v0.11.31
   [d96e819e] Parameters v0.12.3
   [69de0a69] Parsers v2.8.1
   [e409e4f3] PoissonRandom v0.4.4
-  [f517fe37] Polyester v0.7.9
+  [f517fe37] Polyester v0.7.13
   [1d0040c9] PolyesterWeave v0.2.1
   [85a6dd25] PositiveFactorizations v0.2.4
-  [d236fae5] PreallocationTools v0.4.20
-  [aea7be01] PrecompileTools v1.2.0
-  [21216c6a] Preferences v1.4.1
+  [d236fae5] PreallocationTools v0.4.21
+  [aea7be01] PrecompileTools v1.2.1
+  [21216c6a] Preferences v1.4.3
   [1fd47b50] QuadGK v2.9.4
-  [74087812] Random123 v1.6.2
+  [74087812] Random123 v1.7.0
   [e6cf234a] RandomNumbers v1.5.3
   [3cdcf5f2] RecipesBase v1.3.4
-  [731186ca] RecursiveArrayTools v3.8.1
+⌃ [731186ca] RecursiveArrayTools v3.13.0
   [189a3867] Reexport v1.2.2
   [ae029012] Requires v1.3.0
   [ae5879a3] ResettableStacks v1.1.1
   [79098fc4] Rmath v0.7.1
-  [7e49a35a] RuntimeGeneratedFunctions v0.5.12
+  [7e49a35a] RuntimeGeneratedFunctions v0.5.13
   [94e857df] SIMDTypes v0.1.0
-  [0bca4576] SciMLBase v2.26.0
-  [c0aeaf25] SciMLOperators v0.3.7
+  [0bca4576] SciMLBase v2.35.0
+  [c0aeaf25] SciMLOperators v0.3.8
+  [53ae85a6] SciMLStructures v1.1.0
   [efcf1570] Setfield v1.1.1
   [a2af1166] SortingAlgorithms v1.2.1
   [276daf66] SpecialFunctions v2.3.1
   [aedffcd0] Static v0.8.10
   [0d7ed370] StaticArrayInterface v1.5.0
-  [90137ffa] StaticArrays v1.9.2
+  [90137ffa] StaticArrays v1.9.3
   [1e83bf80] StaticArraysCore v1.4.2
   [82ae8749] StatsAPI v1.7.0
-  [2913bbd2] StatsBase v0.34.2
-  [4c63d2b9] StatsFuns v1.3.0
-  [7792a7ef] StrideArraysCore v0.5.2
-  [2efcf032] SymbolicIndexingInterface v0.3.6
+  [2913bbd2] StatsBase v0.34.3
+  [4c63d2b9] StatsFuns v1.3.1
+  [7792a7ef] StrideArraysCore v0.5.6
+  [2efcf032] SymbolicIndexingInterface v0.3.17
   [3783bdb8] TableTraits v1.0.1
   [bd369af6] Tables v1.11.1
   [8290d209] ThreadingUtilities v0.5.2
-  [3bb67fe8] TranscodingStreams v0.10.3
   [410a4b4d] Tricks v0.1.8
   [781d530d] TruncatedStacktraces v1.4.0
   [3a884ed6] UnPack v1.0.2
-  [6e34b625] Bzip2_jll v1.0.8+1
   [efe28fd5] OpenSpecFun_jll v0.5.5+0
   [f50d1b31] Rmath_jll v0.4.0+0
   [0dad84c5] ArgTools v1.1.1
@@ -138,7 +137,6 @@ Threads: 1 default, 0 interactive, 1 GC (on 4 virtual cores)</code></pre></detai
   [ca575930] NetworkOptions v1.2.0
   [44cfe95a] Pkg v1.10.0
   [de0858da] Printf
-  [9abbd945] Profile
   [3fa0cd96] REPL
   [9a3f8284] Random
   [ea8e919c] SHA v0.7.0
@@ -152,7 +150,7 @@ Threads: 1 default, 0 interactive, 1 GC (on 4 virtual cores)</code></pre></detai
   [8dfed614] Test
   [cf7118a7] UUIDs
   [4ec0a83e] Unicode
-  [e66e0078] CompilerSupportLibraries_jll v1.1.0+0
+  [e66e0078] CompilerSupportLibraries_jll v1.1.1+0
   [deac9b47] LibCURL_jll v8.4.0+0
   [e37daf67] LibGit2_jll v1.6.4+0
   [29816b5a] LibSSH2_jll v1.11.0+1
@@ -165,6 +163,6 @@ Threads: 1 default, 0 interactive, 1 GC (on 4 virtual cores)</code></pre></detai
   [8e850b90] libblastrampoline_jll v5.8.0+1
   [8e850ede] nghttp2_jll v1.52.0+1
   [3f19e933] p7zip_jll v17.4.0+2
-Info Packages marked with ⌅ have new versions available but compatibility constraints restrict them from upgrading. To see why use `status --outdated -m`</code></pre></details>You can also download the
+Info Packages marked with ⌃ and ⌅ have new versions available. Those with ⌃ may be upgradable, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated -m`</code></pre></details>You can also download the
 <a href="https://github.com/SciML/DiffEqFinancial.jl/tree/gh-pages/vv2.6.0/assets/Manifest.toml">manifest</a> file and the
-<a href="https://github.com/SciML/DiffEqFinancial.jl/tree/gh-pages/vv2.6.0/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="diffeqfinancial/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Thursday 15 February 2024 00:16">Thursday 15 February 2024</span>. Using Julia version 1.10.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<a href="https://github.com/SciML/DiffEqFinancial.jl/tree/gh-pages/vv2.6.0/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="diffeqfinancial/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.25 on <span class="colophon-date" title="Wednesday 1 May 2024 05:55">Wednesday 1 May 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
