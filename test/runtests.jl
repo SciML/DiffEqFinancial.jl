@@ -22,7 +22,7 @@ prob = GeometricBrownianMotionProblem(r, sigma, S0, (t, T))
 sol = solve(prob, EM(); dt = dt)
 monte_prob = EnsembleProblem(prob)
 sol = solve(monte_prob, EM(); dt = dt, trajectories = 1000000)
-us = [sol[i].u for i in eachindex(sol)]
+us = [sol.u[i].u for i in eachindex(sol)]
 simulated = mean(us)
 
 tsteps = collect(0:dt:T)
