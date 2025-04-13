@@ -144,17 +144,8 @@ end
 
 The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
 
-- `κ` is the speed of mean reversion
-- `θ` is the long-term mean level
-- `σ` is the volatility
-- `r` is the short rate
-
-Constraints for Feller condition: `2κθ ≥ σ²` to ensure positivity of `r(t)`.
-
-This constructor sets up a stochastic differential equation (SDE) problem representing the CIR model. It defines drift and diffusion functions based on the model parameters and returns a `SDEProblem` suitable for simulation using `DifferentialEquations.jl`.
-
 ### Keyword Arguments
-- `modifier`: A function applied inside the square root in the diffusion term. By default, modifier ensures numerical stability when `r(t)` becomes slightly negative due to discretization errors. Without this, the square root of a negative number would result in a domain error. You may override this if using an alternative regularization strategy or if you're certain `r(t)` will remain positive.
+- `modifier`: A function applied inside the square root in the diffusion term. It ensures rate positivity which can break due to discretization error.
 
 """
 function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
