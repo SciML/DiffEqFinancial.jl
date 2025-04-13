@@ -10,6 +10,7 @@ include("problems.jl")
 export HestonProblem, BlackScholesProblem, GeneralizedBlackScholesProblem,
        ExtendedOrnsteinUhlenbeckProblem, OrnsteinUhlenbeckProblem,
        GeometricBrownianMotionProblem,
-       MfStateProblem
+       MfStateProblem,
+       CIRProblem
 
 end # module

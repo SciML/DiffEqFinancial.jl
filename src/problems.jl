@@ -134,3 +134,31 @@ function MfStateProblem(a, σ, u0, tspan; kwargs...)
     end
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
+
+@doc doc"""
+
+``dr = κ(θ - r)dt + σ√r dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+
+- `κ` is the speed of mean reversion
+- `θ` is the long-term mean level
+- `σ` is the volatility
+- `r(t)` is the short rate
+
+Constraints for Feller condition: `2κθ ≥ σ²` to ensure positivity of `r(t)`.
+
+"""
+function CIRProblem(κ, θ, σ, u0, tspan; kwargs...)
+    if 2κ * θ < σ^2
+        @warn "Feller condition 2κθ ≥ σ² is violated. The CIR process may reach zero."
+    end
+    
+    f = function (u, p, t)
+        κ * (θ - u)
+    end
+    g = function (u, p, t)
+        σ * sqrt(u)
+    end
+    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+end
