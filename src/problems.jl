@@ -6,15 +6,18 @@ dv = κ(Θ-v)dt + σ\sqrt{v}dW_2
 dW_1 dW_2 = ρ dt
 ```
 
+### Keyword Arguments
+- `modifier`: A function applied inside the square root in the diffusion term. By default, modifier ensures numerical stability when `u[2]` becomes slightly negative due to discretization errors. Without this, the square root of a negative number would result in a domain error. You may override this if using an alternative regularization strategy or if you're certain `u[2]` will remain positive.
+
 """
-function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), kwargs...)
+function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier=x->max(x,0), kwargs...)
     f = function (du, u, p, t)
         du[1] = μ * u[1]
-        du[2] = κ * (Θ - u[2])
+        du[2] = κ * (Θ - modifier(u[2]))
     end
     g = function (du, u, p, t)
-        du[1] = √u[2] * u[1]
-        du[2] = σ * √u[2]
+        du[1] = √modifier(u[2]) * u[1]
+        du[2] = σ * √modifier(u[2])
     end
     Γ = [1 ρ; ρ 1] # Covariance Matrix
     noise_rate_prototype = nothing
@@ -131,6 +134,30 @@ function MfStateProblem(a, σ, u0, tspan; kwargs...)
     end
     g = function (u, p, t)
         σ(t) * exp(a * t)
+    end
+    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+end
+
+@doc doc"""
+
+``dr = κ(θ - r)dt + σ√r dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+
+### Keyword Arguments
+- `modifier`: A function applied inside the square root in the diffusion term. It ensures rate positivity which can break due to discretization error.
+
+"""
+function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
+    if 2κ * θ < σ^2
+        @warn "Feller condition 2κθ ≥ σ² is violated. The CIR process may reach zero."
+    end
+    
+    f = function (u, p, t)
+        κ * (θ - modifier(u))
+    end
+    g = function (u, p, t)
+        σ * sqrt(modifier(u))
     end
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
