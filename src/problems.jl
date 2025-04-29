@@ -162,15 +162,22 @@ function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
-function CIRNoise(κ, θ, σ, t0, W0, Z0 = nothing; kwargs...)
-    
-    @inline function CIR_dist(DW, W, dt, u, p, t, rng) #dist
-        d = 4 * κ * θ / σ^2  # Degrees of freedom
-        λ = - 4 * κ * exp(-κ * T) * V0 / (σ^2 * expm1(-κ * T))  # Noncentrality parameter
-        c = - σ^2 * expm1(-κ * T) / 4κ  # Scaling factor
-        V_T = c * Distributions.rand(rng, NoncentralChisq(d, λ))
-        return V_T - W[end][2]
-    end
+struct CoxIngersollRoss{T1, T2, T3}
+    κ::T1
+    θ::T2
+    σ::T3
+end
 
-    return NoiseProcess{false}(t0, W0, Z0, CIR_dist, nothing)
+function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
+    κ, θ, σ = X.κ, X.θ, X.σ
+    d = 4 * κ * θ / σ^2  # Degrees of freedom
+    λ = - 4 * κ * exp(-κ * T) * V0 / (σ^2 * expm1(-κ * T))  # Noncentrality parameter
+    c = - σ^2 * expm1(-κ * T) / 4κ  # Scaling factor
+    V_T = c * Distributions.rand(rng, NoncentralChisq(d, λ))
+    return V_T - W[end][2]
+end
+
+function CIRNoise(κ, θ, σ, t0, W0, Z0 = nothing; kwargs...)
+    cir = CoxIngersollRoss(κ, θ, σ)
+    return NoiseProcess{false}(t0, W0, Z0, cir, nothing)
 end
