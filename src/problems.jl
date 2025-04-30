@@ -177,6 +177,14 @@ function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
     return V_T - W[end][2]
 end
 
+@doc doc"""
+
+``dr = κ(θ - r)dt + σ√r dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+This is a distributionally-exact process, leveraging the known χ² transition law of the process.
+The sampling leverages Distributions.jl.
+"""
 function CIRNoise(κ, θ, σ, t0, W0, Z0 = nothing; kwargs...)
     cir = CoxIngersollRoss(κ, θ, σ)
     return NoiseProcess{false}(t0, W0, Z0, cir, nothing)
