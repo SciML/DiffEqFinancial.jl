@@ -162,19 +162,50 @@ function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
+@doc doc"""
+
+``dr = \kappa(\theta - r)dt + \sigma\sqrt{r} dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+
+This type represents the exact transition law of the CIR process, and can be used to sample directly from the known non-central \(\chi^2\) distribution implied by the model.
+
+### Fields
+- `κ `: Mean-reversion speed.
+- `θ`: Long-run mean level.
+- `σ`: Volatility coefficient.
+
+This exact law is used internally by `CIRNoise` to create a `NoiseProcess` with the correct distributional dynamics.
+
+"""
 struct CoxIngersollRoss{T1, T2, T3}
     κ::T1
     θ::T2
     σ::T3
 end
 
+@doc doc"""
+Samples the CIR process exactly using the non-central chi-squared transition distribution.
+
+### Arguments
+- `DW`: Not used but required for interface compatibility.
+- `W`: Path history; last value is used for adjustment.
+- `dt`: Time step size.
+- `u`: Current value (not used in exact sampling).
+- `p`: Parameters (not used here).
+- `t`: Current time (not used here).
+- `rng`: Random number generator.
+
+Returns an increment from the single sample from the exact transition distribution.
+
+"""
 function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
     κ, θ, σ = X.κ, X.θ, X.σ
     d = 4 * κ * θ / σ^2  # Degrees of freedom
-    λ = - 4 * κ * exp(-κ * T) * V0 / (σ^2 * expm1(-κ * T))  # Noncentrality parameter
-    c = - σ^2 * expm1(-κ * T) / 4κ  # Scaling factor
+    λ = - 4 * κ * exp(-κ * dt) * W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
+    c = - σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
     V_T = c * Distributions.rand(rng, NoncentralChisq(d, λ))
-    return V_T - W[end][2]
+    return V_T - W[end] #return the increment
 end
 
 @doc doc"""
@@ -184,6 +215,7 @@ end
 The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
 This is a distributionally-exact process, leveraging the known χ² transition law of the process.
 The sampling leverages Distributions.jl.
+This method is way slower than the discretized version, hence it is advisable to use it only when simulation at few time-points is needed with no bias.
 """
 function CIRNoise(κ, θ, σ, t0, W0, Z0 = nothing; kwargs...)
     cir = CoxIngersollRoss(κ, θ, σ)

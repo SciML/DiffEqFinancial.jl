@@ -46,4 +46,23 @@ dist(t) = c(t) * Distributions.mean(NoncentralChisq(d, λ(t)))
 tsteps = collect(dt:dt:T) 
 expected = dist.(tsteps)
 testerr = sum(abs2.(simulated[2:end] .- expected))
+@show testerr
+@test testerr < 2e-1
+
+dt = 1 / 10.0
+t0 = 0.0
+W0 = u0
+tspan = (0.0, 1.0)
+noise = CIRNoise(κ, θ, σ, t0, W0)
+noise_problem = NoiseProblem(noise, tspan)
+monte_exact_prob = EnsembleProblem(noise_problem)
+sol_ex = solve(noise_problem, EM(); dt = dt)
+sol_exact_ens = solve(monte_exact_prob, EM(); dt = dt, trajectories = 1000)
+us_exact = [sol_exact_ens.u[i].u for i in eachindex(sol_exact_ens)]
+
+tsteps = collect(dt:dt:T) 
+expected = dist.(tsteps)
+simulated_exact = mean(us_exact)
+testerr_exact = sum(abs2.(simulated_exact[2:end] .- expected))
+@show testerr_exact
 @test testerr < 2e-1
