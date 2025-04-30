@@ -1,4 +1,0 @@
-[deps]
-DiffEqFinancial = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
-Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-StochasticDiffEq = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
