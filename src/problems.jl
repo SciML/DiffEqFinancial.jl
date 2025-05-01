@@ -11,7 +11,7 @@ dW_1 dW_2 = ρ dt
 
 """
 function HestonProblem(
-        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x->max(x, 0), kwargs...)
+        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x -> max(x, 0), kwargs...)
     f = function (du, u, p, t)
         du[1] = μ * u[1]
         du[2] = κ * (Θ - modifier(u[2]))
@@ -149,7 +149,7 @@ The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in i
 - `modifier`: A function applied inside the square root in the diffusion term. It ensures rate positivity which can break due to discretization error.
 
 """
-function CIRProblem(κ, θ, σ, u0, tspan; modifier = x->max(x, 0), kwargs...)
+function CIRProblem(κ, θ, σ, u0, tspan; modifier = x -> max(x, 0), kwargs...)
     if 2κ * θ < σ^2
         @warn "Feller condition 2κθ ≥ σ² is violated. The CIR process may reach zero."
     end
@@ -203,8 +203,8 @@ Returns an increment from the single sample from the exact transition distributi
 function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
     κ, θ, σ = X.κ, X.θ, X.σ
     d = 4 * κ * θ / σ^2  # Degrees of freedom
-    λ = - 4 * κ * exp(-κ * dt) * W.W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
-    c = - σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
+    λ = -4 * κ * exp(-κ * dt) * W.W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
+    c = -σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
     sample = c * Distributions.rand(rng, NoncentralChisq(d, λ))
     return sample - W.W[end] #return the increment
 end
