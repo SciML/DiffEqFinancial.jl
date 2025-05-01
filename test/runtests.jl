@@ -46,7 +46,6 @@ dist(t) = c(t) * Distributions.mean(NoncentralChisq(d, λ(t)))
 tsteps = collect(dt:dt:T) 
 expected = dist.(tsteps)
 testerr = sum(abs2.(simulated[2:end] .- expected))
-@show testerr
 @test testerr < 2e-1
 
 dt = 1 / 10.0
@@ -64,5 +63,4 @@ tsteps = collect(dt:dt:T)
 expected = dist.(tsteps)
 simulated_exact = mean(us_exact)
 testerr_exact = sum(abs2.(simulated_exact[2:end] .- expected))
-@show testerr_exact
-@test testerr < 2e-1
+@test testerr_exact < 2e-1
