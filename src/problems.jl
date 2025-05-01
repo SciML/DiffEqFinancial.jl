@@ -203,10 +203,10 @@ Returns an increment from the single sample from the exact transition distributi
 function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
     κ, θ, σ = X.κ, X.θ, X.σ
     d = 4 * κ * θ / σ^2  # Degrees of freedom
-    λ = - 4 * κ * exp(-κ * dt) * W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
+    λ = - 4 * κ * exp(-κ * dt) * W.W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
     c = - σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
-    V_T = c * Distributions.rand(rng, NoncentralChisq(d, λ))
-    return V_T - W[end] #return the increment
+    sample = c * Distributions.rand(rng, NoncentralChisq(d, λ))
+    return sample - W.W[end] #return the increment
 end
 
 @doc doc"""
