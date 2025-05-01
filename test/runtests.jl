@@ -30,7 +30,7 @@ expected = S0 * exp.(r * tsteps)
 testerr = sum(abs2.(simulated .- expected))
 @test testerr < 2e-1
 
-κ, θ, σ, u0, tspan =  0.30, 0.04, 0.15, 0.2, (0.0, 1.0)
+κ, θ, σ, u0, tspan = 0.30, 0.04, 0.15, 0.2, (0.0, 1.0)
 prob = CIRProblem(κ, θ, σ, u0, tspan)
 sol = solve(prob, EM(); dt = dt)
 monte_prob = EnsembleProblem(prob)
@@ -43,7 +43,7 @@ d = 4 * κ * θ / σ^2  # Degrees of freedom
 c(t) = σ^2 * (-expm1(-κ * t)) / (4 * κ)  # Scaling factor
 dist(t) = c(t) * Distributions.mean(NoncentralChisq(d, λ(t)))
 
-tsteps = collect(dt:dt:T) 
+tsteps = collect(dt:dt:T)
 expected = dist.(tsteps)
 testerr = sum(abs2.(simulated[2:end] .- expected))
 @test testerr < 2e-1
@@ -59,7 +59,7 @@ sol_ex = solve(noise_problem, EM(); dt = dt)
 sol_exact_ens = solve(monte_exact_prob, EM(); dt = dt, trajectories = 1000)
 us_exact = [sol_exact_ens.u[i].u for i in eachindex(sol_exact_ens)]
 
-tsteps = collect(dt:dt:T) 
+tsteps = collect(dt:dt:T)
 expected = dist.(tsteps)
 simulated_exact = mean(us_exact)
 testerr_exact = sum(abs2.(simulated_exact[2:end] .- expected))

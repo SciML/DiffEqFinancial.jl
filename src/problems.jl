@@ -10,7 +10,8 @@ dW_1 dW_2 = ρ dt
 - `modifier`: A function applied inside the square root in the diffusion term. By default, modifier ensures numerical stability when `u[2]` becomes slightly negative due to discretization errors. Without this, the square root of a negative number would result in a domain error. You may override this if using an alternative regularization strategy or if you're certain `u[2]` will remain positive.
 
 """
-function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier=x->max(x,0), kwargs...)
+function HestonProblem(
+        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x->max(x, 0), kwargs...)
     f = function (du, u, p, t)
         du[1] = μ * u[1]
         du[2] = κ * (Θ - modifier(u[2]))
@@ -148,11 +149,11 @@ The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in i
 - `modifier`: A function applied inside the square root in the diffusion term. It ensures rate positivity which can break due to discretization error.
 
 """
-function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
+function CIRProblem(κ, θ, σ, u0, tspan; modifier = x->max(x, 0), kwargs...)
     if 2κ * θ < σ^2
         @warn "Feller condition 2κθ ≥ σ² is violated. The CIR process may reach zero."
     end
-    
+
     f = function (u, p, t)
         κ * (θ - modifier(u))
     end
