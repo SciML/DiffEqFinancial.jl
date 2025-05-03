@@ -10,7 +10,8 @@ dW_1 dW_2 = ρ dt
 - `modifier`: A function applied inside the square root in the diffusion term. By default, modifier ensures numerical stability when `u[2]` becomes slightly negative due to discretization errors. Without this, the square root of a negative number would result in a domain error. You may override this if using an alternative regularization strategy or if you're certain `u[2]` will remain positive.
 
 """
-function HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier=x->max(x,0), kwargs...)
+function HestonProblem(
+        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x -> max(x, 0), kwargs...)
     f = function (du, u, p, t)
         du[1] = μ * u[1]
         du[2] = κ * (Θ - modifier(u[2]))
@@ -148,11 +149,11 @@ The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in i
 - `modifier`: A function applied inside the square root in the diffusion term. It ensures rate positivity which can break due to discretization error.
 
 """
-function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
+function CIRProblem(κ, θ, σ, u0, tspan; modifier = x -> max(x, 0), kwargs...)
     if 2κ * θ < σ^2
         @warn "Feller condition 2κθ ≥ σ² is violated. The CIR process may reach zero."
     end
-    
+
     f = function (u, p, t)
         κ * (θ - modifier(u))
     end
@@ -160,4 +161,64 @@ function CIRProblem(κ, θ, σ, u0, tspan; modifier=x->max(x,0), kwargs...)
         σ * sqrt(modifier(u))
     end
     SDEProblem{false}(f, g, u0, tspan; kwargs...)
+end
+
+@doc doc"""
+
+``dr = \kappa(\theta - r)dt + \sigma\sqrt{r} dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+
+This type represents the exact transition law of the CIR process, and can be used to sample directly from the known non-central \(\chi^2\) distribution implied by the model.
+
+### Fields
+- `κ `: Mean-reversion speed.
+- `θ`: Long-run mean level.
+- `σ`: Volatility coefficient.
+
+This exact law is used internally by `CIRNoise` to create a `NoiseProcess` with the correct distributional dynamics.
+
+"""
+struct CoxIngersollRoss{T1, T2, T3}
+    κ::T1
+    θ::T2
+    σ::T3
+end
+
+@doc doc"""
+Samples the CIR process exactly using the non-central chi-squared transition distribution.
+
+### Arguments
+- `DW`: Not used but required for interface compatibility.
+- `W`: Path history; last value is used for adjustment.
+- `dt`: Time step size.
+- `u`: Current value (not used in exact sampling).
+- `p`: Parameters (not used here).
+- `t`: Current time (not used here).
+- `rng`: Random number generator.
+
+Returns an increment from the single sample from the exact transition distribution.
+
+"""
+function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
+    κ, θ, σ = X.κ, X.θ, X.σ
+    d = 4 * κ * θ / σ^2  # Degrees of freedom
+    λ = -4 * κ * exp(-κ * dt) * W.W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
+    c = -σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
+    sample = c * Distributions.rand(rng, NoncentralChisq(d, λ))
+    return sample - W.W[end] #return the increment
+end
+
+@doc doc"""
+
+``dr = κ(θ - r)dt + σ√r dW_t``
+
+The Cox-Ingersoll-Ross (CIR) model is commonly used for short-rate modeling in interest rate theory.
+This is a distributionally-exact process, leveraging the known χ² transition law of the process.
+The sampling leverages Distributions.jl.
+This method is way slower than the discretized version, hence it is advisable to use it only when simulation at few time-points is needed with no bias.
+"""
+function CIRNoise(κ, θ, σ, t0, W0, Z0 = nothing; kwargs...)
+    cir = CoxIngersollRoss(κ, θ, σ)
+    return NoiseProcess{false}(t0, W0, Z0, cir, nothing)
 end
