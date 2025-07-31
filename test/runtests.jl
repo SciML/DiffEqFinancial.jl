@@ -18,10 +18,10 @@ T=1.0
 days = 252
 dt = 1/days
 
-prob = GeometricBrownianMotionProblem(r, sigma, S0, (t,T))
-sol = solve(prob,EM();dt=dt)
+prob = GeometricBrownianMotionProblem(r, sigma, S0, (t, T))
+sol = solve(prob, EM(); dt = dt)
 monte_prob = EnsembleProblem(prob)
-sol = solve(monte_prob, EM(); dt=dt,trajectories=1000000)
+sol = solve(monte_prob, EM(); dt = dt, trajectories = 1000000)
 us=[sol[i].u for i in eachindex(sol)]
 simulated = mean(us)
 
