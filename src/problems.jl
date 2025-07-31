@@ -27,7 +27,7 @@ function HestonProblem(
         seed = rand(UInt64)
     end
     noise = CorrelatedWienerProcess!(Γ, tspan[1], zeros(2), zeros(2),
-                                     rng = Xorshifts.Xoroshiro128Plus(seed))
+        rng = Xorshifts.Xoroshiro128Plus(seed))
 
     sde_f = SDEFunction{true}(f, g)
     SDEProblem(sde_f, u0, tspan, noise = noise, seed = seed, kwargs...)
@@ -56,7 +56,7 @@ end
 Solves for ``log S(t)``.
 """
 mutable struct BlackScholesProblem{uType, tType, tupType, isinplace, NP, F, F2, C, ND, MM
-                                   } <:
+} <:
                DiffEqBase.AbstractSDEProblem{uType, tType, isinplace, ND}
     r::tType
     Θ::tType
@@ -74,9 +74,9 @@ mutable struct BlackScholesProblem{uType, tType, tupType, isinplace, NP, F, F2, 
 end
 
 function BlackScholesProblem(r, Θ, σ, u0, tspan; callback = CallbackSet(),
-                             noise_rate_prototype = nothing, seed = UInt64(0))
+        noise_rate_prototype = nothing, seed = UInt64(0))
     GeneralizedBlackScholesProblem(r, (t) -> 0, Θ, σ, u0, tspan, callback = callback,
-                                   seed = seed)
+        seed = seed)
 end
 
 @doc doc"""
