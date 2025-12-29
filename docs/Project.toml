@@ -3,5 +3,5 @@ DiffEqFinancial = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 
 [compat]
-Documenter = "0.27"
+Documenter = "1"
 DiffEqFinancial = "2.4.0"
