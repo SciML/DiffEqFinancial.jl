@@ -17,8 +17,9 @@ function HestonProblem(
         du[2] = κ * (Θ - modifier(u[2]))
     end
     g = function (du, u, p, t)
-        du[1] = √modifier(u[2]) * u[1]
-        du[2] = σ * √modifier(u[2])
+        sqrt_mod_v = √modifier(u[2])
+        du[1] = sqrt_mod_v * u[1]
+        du[2] = σ * sqrt_mod_v
     end
     Γ = [1 ρ; ρ 1] # Covariance Matrix
     noise_rate_prototype = nothing
