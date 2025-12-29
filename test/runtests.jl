@@ -63,3 +63,10 @@ end # testset DiffEqFinancial.jl
             0.1, 0.5, 0.2, 0.0, 0.4)
     end
 end
+
+# AllocCheck tests run in a separate group to avoid precompilation issues
+if get(ENV, "GROUP", "all") == "all" || get(ENV, "GROUP", "all") == "nopre"
+    @testset "AllocCheck - Zero Allocations" begin
+        include("alloc_tests.jl")
+    end
+end
