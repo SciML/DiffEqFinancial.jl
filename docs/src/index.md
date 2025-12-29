@@ -74,9 +74,11 @@ You can also download the
 ```
 ```@eval
 using TOML
+using Markdown
 version = TOML.parse(read("../../Project.toml",String))["version"]
 name = TOML.parse(read("../../Project.toml",String))["name"]
 link = "https://github.com/SciML/"*name*".jl/tree/gh-pages/v"*version*"/assets/Manifest.toml"
+Markdown.parse(link)
 ```
 ```@raw html
 ">manifest</a> file and the
@@ -84,9 +86,11 @@ link = "https://github.com/SciML/"*name*".jl/tree/gh-pages/v"*version*"/assets/M
 ```
 ```@eval
 using TOML
+using Markdown
 version = TOML.parse(read("../../Project.toml",String))["version"]
 name = TOML.parse(read("../../Project.toml",String))["name"]
 link = "https://github.com/SciML/"*name*".jl/tree/gh-pages/v"*version*"/assets/Project.toml"
+Markdown.parse(link)
 ```
 ```@raw html
 ">project</a> file.
