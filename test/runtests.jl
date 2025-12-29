@@ -2,6 +2,10 @@ using DiffEqFinancial, Statistics, StochasticDiffEq
 using Test
 using JET
 
+@testset "Explicit Imports" begin
+    include("explicit_imports.jl")
+end
+
 @testset "DiffEqFinancial.jl" begin
 u0 = [1.0; 0.5]
 σ = 0.25
