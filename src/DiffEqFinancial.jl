@@ -1,5 +1,3 @@
-__precompile__()
-
 module DiffEqFinancial
 using DiffEqBase, DiffEqNoiseProcess, Markdown, LinearAlgebra, Distributions
 
