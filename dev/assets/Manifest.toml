@@ -263,7 +263,7 @@ version = "6.194.0"
 
 [[deps.DiffEqFinancial]]
 deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "LinearAlgebra", "Markdown", "RandomNumbers"]
-path = "/home/runner/work/DiffEqFinancial.jl/DiffEqFinancial.jl"
+path = "/home/chrisrackauckas/github-runners/deepsea4-26/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 version = "2.7.0"
 
@@ -1065,9 +1065,9 @@ version = "1.0.0"
 
 [[deps.SciMLStructures]]
 deps = ["ArrayInterface"]
-git-tree-sha1 = "566c4ed301ccb2a44cbd5a27da5f885e0ed1d5df"
+git-tree-sha1 = "2cc94f8d86a425a0e280c815c9dca7c744522999"
 uuid = "53ae85a6-f571-4167-b2af-e1d143709226"
-version = "1.7.0"
+version = "1.8.0"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
