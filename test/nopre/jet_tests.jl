@@ -60,4 +60,28 @@ using Test
             0.1, 0.5, 0.2, 0.0, 0.4
         )
     end
+
+    @testset "Analytical functions type stability" begin
+        @test_opt target_modules = (DiffEqFinancial,) gbm_mean(0.05, 100.0, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) gbm_variance(0.05, 0.2, 100.0, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) gbm_std(0.05, 0.2, 100.0, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) ou_mean(0.5, 1.0, 0.5, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) ou_variance(0.5, 0.3, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) ou_std(0.5, 0.3, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) ou_stationary_mean(1.0)
+        @test_opt target_modules = (DiffEqFinancial,) ou_stationary_variance(0.5, 0.3)
+        @test_opt target_modules = (DiffEqFinancial,) cir_mean(0.5, 0.04, 0.03, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) cir_variance(0.5, 0.04, 0.1, 0.03, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) cir_std(0.5, 0.04, 0.1, 0.03, 2.0)
+        @test_opt target_modules = (DiffEqFinancial,) cir_stationary_mean(0.04)
+        @test_opt target_modules = (DiffEqFinancial,) cir_stationary_variance(0.5, 0.04, 0.1)
+        @test_opt target_modules = (DiffEqFinancial,) bs_log_mean(0.05, 0.2, 4.6, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) bs_log_variance(0.2, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) bs_log_std(0.2, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) heston_mean(0.05, 100.0, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) heston_variance_mean(2.0, 0.04, 0.04, 1.0)
+        @test_opt target_modules = (DiffEqFinancial,) heston_variance_variance(
+            2.0, 0.04, 0.3, 0.04, 1.0
+        )
+    end
 end
