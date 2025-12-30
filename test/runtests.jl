@@ -17,16 +17,16 @@ end
     r = 0.03
     sigma = 0.2
     S0 = 100
-    t=0
-    T=1.0
+    t = 0
+    T = 1.0
     days = 252
-    dt = 1/days
+    dt = 1 / days
 
     prob = GeometricBrownianMotionProblem(r, sigma, S0, (t, T))
     sol = solve(prob, EM(); dt = dt)
     monte_prob = EnsembleProblem(prob)
     sol = solve(monte_prob, EM(); dt = dt, trajectories = 1000000)
-    us=[sol[i].u for i in eachindex(sol)]
+    us = [sol[i].u for i in eachindex(sol)]
     simulated = mean(us)
 
     tsteps = collect(0:dt:T)
