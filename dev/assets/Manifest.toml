@@ -262,8 +262,8 @@ version = "6.194.0"
     Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [[deps.DiffEqFinancial]]
-deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "LinearAlgebra", "Markdown", "RandomNumbers"]
-path = "/home/chrisrackauckas/github-runners/demeter4-21/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
+deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "Markdown", "RandomNumbers"]
+path = "/home/chrisrackauckas/github-runners/deepsea4-15/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 version = "2.8.0"
 
