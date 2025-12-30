@@ -58,7 +58,7 @@ Solves for ``log S(t)``.
 """
 mutable struct BlackScholesProblem{uType, tType, tupType, isinplace, NP, F, F2, C, ND, MM
 } <:
-               DiffEqBase.AbstractSDEProblem{uType, tType, isinplace, ND}
+               AbstractSDEProblem{uType, tType, isinplace, ND}
     r::tType
     Θ::tType
     σ::tType
@@ -206,7 +206,7 @@ function (X::CoxIngersollRoss)(DW, W, dt, u, p, t, rng) #dist
     d = 4 * κ * θ / σ^2  # Degrees of freedom
     λ = -4 * κ * exp(-κ * dt) * W.W[end] / (σ^2 * expm1(-κ * dt))  # Noncentrality parameter
     c = -σ^2 * expm1(-κ * dt) / 4κ  # Scaling factor
-    sample = c * Distributions.rand(rng, NoncentralChisq(d, λ))
+    sample = c * rand(rng, NoncentralChisq(d, λ))
     return sample - W.W[end] #return the increment
 end
 
