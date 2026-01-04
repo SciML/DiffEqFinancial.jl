@@ -10,10 +10,10 @@ import RandomNumbers: Xorshifts
 include("problems.jl")
 
 export HestonProblem, BlackScholesProblem, GeneralizedBlackScholesProblem,
-       ExtendedOrnsteinUhlenbeckProblem, OrnsteinUhlenbeckProblem,
-       GeometricBrownianMotionProblem,
-       MfStateProblem,
-       CIRProblem,
-       CIRNoise
+    ExtendedOrnsteinUhlenbeckProblem, OrnsteinUhlenbeckProblem,
+    GeometricBrownianMotionProblem,
+    MfStateProblem,
+    CIRProblem,
+    CIRNoise
 
 end # module
