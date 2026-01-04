@@ -11,15 +11,16 @@ dW_1 dW_2 = ρ dt
 
 """
 function HestonProblem(
-        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x -> max(x, 0), kwargs...)
+        μ, κ, Θ, σ, ρ, u0, tspan; seed = UInt64(0), modifier = x -> max(x, 0), kwargs...
+    )
     f = function (du, u, p, t)
         du[1] = μ * u[1]
-        du[2] = κ * (Θ - modifier(u[2]))
+        return du[2] = κ * (Θ - modifier(u[2]))
     end
     g = function (du, u, p, t)
         sqrt_mod_v = √modifier(u[2])
         du[1] = sqrt_mod_v * u[1]
-        du[2] = σ * sqrt_mod_v
+        return du[2] = σ * sqrt_mod_v
     end
     Γ = [1 ρ; ρ 1] # Covariance Matrix
     noise_rate_prototype = nothing
@@ -27,11 +28,13 @@ function HestonProblem(
     if seed == 0
         seed = rand(UInt64)
     end
-    noise = CorrelatedWienerProcess!(Γ, tspan[1], zeros(2), zeros(2),
-        rng = Xorshifts.Xoroshiro128Plus(seed))
+    noise = CorrelatedWienerProcess!(
+        Γ, tspan[1], zeros(2), zeros(2),
+        rng = Xorshifts.Xoroshiro128Plus(seed)
+    )
 
     sde_f = SDEFunction{true}(f, g)
-    SDEProblem(sde_f, u0, tspan, noise = noise, seed = seed, kwargs...)
+    return SDEProblem(sde_f, u0, tspan, noise = noise, seed = seed, kwargs...)
 end
 
 @doc doc"""
@@ -42,12 +45,12 @@ Solves for ``log S(t)``.
 """
 function GeneralizedBlackScholesProblem(r, q, Θ, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        r(t) - q(t) - Θ(t, exp(u))^2 / 2
+        return r(t) - q(t) - Θ(t, exp(u))^2 / 2
     end
     g = function (u, p, t)
-        σ
+        return σ
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
@@ -56,9 +59,10 @@ end
 
 Solves for ``log S(t)``.
 """
-mutable struct BlackScholesProblem{uType, tType, tupType, isinplace, NP, F, F2, C, ND, MM
-} <:
-               AbstractSDEProblem{uType, tType, isinplace, ND}
+mutable struct BlackScholesProblem{
+        uType, tType, tupType, isinplace, NP, F, F2, C, ND, MM,
+    } <:
+    AbstractSDEProblem{uType, tType, isinplace, ND}
     r::tType
     Θ::tType
     σ::tType
@@ -74,10 +78,14 @@ mutable struct BlackScholesProblem{uType, tType, tupType, isinplace, NP, F, F2, 
     seed::UInt64
 end
 
-function BlackScholesProblem(r, Θ, σ, u0, tspan; callback = CallbackSet(),
-        noise_rate_prototype = nothing, seed = UInt64(0))
-    GeneralizedBlackScholesProblem(r, (t) -> 0, Θ, σ, u0, tspan, callback = callback,
-        seed = seed)
+function BlackScholesProblem(
+        r, Θ, σ, u0, tspan; callback = CallbackSet(),
+        noise_rate_prototype = nothing, seed = UInt64(0)
+    )
+    return GeneralizedBlackScholesProblem(
+        r, (t) -> 0, Θ, σ, u0, tspan, callback = callback,
+        seed = seed
+    )
 end
 
 @doc doc"""
@@ -87,12 +95,12 @@ end
 """
 function ExtendedOrnsteinUhlenbeckProblem(a, b, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        a * (b(t) - u)
+        return a * (b(t) - u)
     end
     g = function (u, p, t)
-        σ
+        return σ
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
@@ -102,12 +110,12 @@ end
 """
 function OrnsteinUhlenbeckProblem(a, r, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        a * (r - u)
+        return a * (r - u)
     end
     g = function (u, p, t)
-        σ
+        return σ
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
@@ -117,12 +125,12 @@ end
 """
 function GeometricBrownianMotionProblem(μ, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        μ * u
+        return μ * u
     end
     g = function (u, p, t)
-        σ * u
+        return σ * u
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
@@ -132,12 +140,12 @@ end
 """
 function MfStateProblem(a, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        0
+        return 0
     end
     g = function (u, p, t)
-        σ(t) * exp(a * t)
+        return σ(t) * exp(a * t)
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
@@ -156,12 +164,12 @@ function CIRProblem(κ, θ, σ, u0, tspan; modifier = x -> max(x, 0), kwargs...)
     end
 
     f = function (u, p, t)
-        κ * (θ - modifier(u))
+        return κ * (θ - modifier(u))
     end
     g = function (u, p, t)
-        σ * sqrt(modifier(u))
+        return σ * sqrt(modifier(u))
     end
-    SDEProblem{false}(f, g, u0, tspan; kwargs...)
+    return SDEProblem{false}(f, g, u0, tspan; kwargs...)
 end
 
 @doc doc"""
