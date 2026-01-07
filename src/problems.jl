@@ -83,7 +83,7 @@ function BlackScholesProblem(
         noise_rate_prototype = nothing, seed = UInt64(0)
     )
     return GeneralizedBlackScholesProblem(
-        r, (t) -> 0, Θ, σ, u0, tspan, callback = callback,
+        r, (t) -> zero(t), Θ, σ, u0, tspan, callback = callback,
         seed = seed
     )
 end
@@ -140,7 +140,7 @@ end
 """
 function MfStateProblem(a, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        return 0
+        return zero(u)
     end
     g = function (u, p, t)
         return σ(t) * exp(a * t)

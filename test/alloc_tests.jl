@@ -72,4 +72,31 @@ using Test
         @check_allocs test_mf_diff(g, u) = g(u, nothing, 0.5)
         @test (test_mf_diff(prob.f.g, 0.0); true)
     end
+
+    @testset "GeneralizedBlackScholesProblem" begin
+        # Use constant callables for allocation testing
+        r_func = t -> 0.05
+        q_func = t -> 0.01
+        theta_func = (t, u) -> 0.2
+        prob = GeneralizedBlackScholesProblem(r_func, q_func, theta_func, 0.2, 0.5, (0.0, 1.0))
+
+        @check_allocs test_gbs_drift(f, u) = f(u, nothing, 0.5)
+        @test (test_gbs_drift(prob.f.f, 0.5); true)
+
+        @check_allocs test_gbs_diff(g, u) = g(u, nothing, 0.5)
+        @test (test_gbs_diff(prob.f.g, 0.5); true)
+    end
+
+    @testset "BlackScholesProblem" begin
+        # BlackScholesProblem wraps GeneralizedBlackScholesProblem with q(t) = 0
+        r_func = t -> 0.05
+        theta_func = (t, u) -> 0.2
+        prob = BlackScholesProblem(r_func, theta_func, 0.2, 0.5, (0.0, 1.0))
+
+        @check_allocs test_bs_drift(f, u) = f(u, nothing, 0.5)
+        @test (test_bs_drift(prob.f.f, 0.5); true)
+
+        @check_allocs test_bs_diff(g, u) = g(u, nothing, 0.5)
+        @test (test_bs_diff(prob.f.g, 0.5); true)
+    end
 end
