@@ -35,6 +35,11 @@ end
     @test testerr < 2.0e-1
 end # testset DiffEqFinancial.jl
 
+# Interface tests for type genericity
+@testset "Interface Compatibility" begin
+    include("interface_tests.jl")
+end
+
 # JET and AllocCheck tests run in a separate group to avoid precompilation issues
 if get(ENV, "GROUP", "all") == "all" || get(ENV, "GROUP", "all") == "nopre"
     include("jet_tests.jl")
