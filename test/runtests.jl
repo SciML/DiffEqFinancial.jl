@@ -10,6 +10,10 @@ function activate_nopre_env()
     return Pkg.instantiate()
 end
 
+@testset "Interface Compatibility" begin
+    include("interface_tests.jl")
+end
+
 @testset "DiffEqFinancial.jl" begin
     if GROUP == "all" || GROUP == "core"
         @testset "Core Tests" begin

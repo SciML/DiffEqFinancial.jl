@@ -23,7 +23,8 @@ function HestonProblem(
         return du[2] = σ * sqrt_mod_v
     end
     T = eltype(u0)
-    Γ = T[1 ρ; ρ 1] # Covariance Matrix
+    ρ_T = T(ρ)
+    Γ = T[1 ρ_T; ρ_T 1] # Covariance Matrix
     noise_rate_prototype = nothing
 
     if seed == 0
@@ -83,8 +84,9 @@ function BlackScholesProblem(
         r, Θ, σ, u0, tspan; callback = CallbackSet(),
         noise_rate_prototype = nothing, seed = UInt64(0)
     )
+    T = typeof(u0)
     return GeneralizedBlackScholesProblem(
-        r, (t) -> zero(t), Θ, σ, u0, tspan, callback = callback,
+        r, (t) -> zero(T), Θ, σ, u0, tspan, callback = callback,
         seed = seed
     )
 end
