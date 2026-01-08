@@ -277,7 +277,7 @@ version = "6.195.0"
 
 [[deps.DiffEqFinancial]]
 deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "Markdown", "RandomNumbers"]
-path = "/home/chrisrackauckas/github-runners/deepsea4-17/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
+path = "/home/runner/work/DiffEqFinancial.jl/DiffEqFinancial.jl"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 version = "2.8.0"
 
