@@ -22,14 +22,15 @@ function HestonProblem(
         du[1] = sqrt_mod_v * u[1]
         return du[2] = σ * sqrt_mod_v
     end
-    Γ = [1 ρ; ρ 1] # Covariance Matrix
+    T = eltype(u0)
+    Γ = T[1 ρ; ρ 1] # Covariance Matrix
     noise_rate_prototype = nothing
 
     if seed == 0
         seed = rand(UInt64)
     end
     noise = CorrelatedWienerProcess!(
-        Γ, tspan[1], zeros(2), zeros(2),
+        Γ, tspan[1], zeros(T, 2), zeros(T, 2),
         rng = Xorshifts.Xoroshiro128Plus(seed)
     )
 
@@ -140,7 +141,7 @@ end
 """
 function MfStateProblem(a, σ, u0, tspan; kwargs...)
     f = function (u, p, t)
-        return 0
+        return zero(u)
     end
     g = function (u, p, t)
         return σ(t) * exp(a * t)
