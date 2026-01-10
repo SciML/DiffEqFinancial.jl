@@ -1,0 +1,13 @@
+[deps]
+AllocCheck = "9b6a8646-10ed-4001-bbdc-1d2f46dfbb1a"
+DiffEqFinancial = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
+ExplicitImports = "7d51a73a-1435-4ff3-83d9-f097790105c7"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+AllocCheck = "0.2"
+DiffEqFinancial = "2"
+ExplicitImports = "1.14"
+JET = "0.9, 0.10, 0.11"
+Test = "1.10"

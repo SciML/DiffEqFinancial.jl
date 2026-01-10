@@ -22,7 +22,14 @@ jobs:
           - "1"
           - "lts"
           - "pre"
+        group:
+          - "core"
+          - "nopre"
+        exclude:
+          - group: "nopre"
+            version: "pre"
     uses: "SciML/.github/.github/workflows/tests.yml@v1"
     with:
       julia-version: "${{ matrix.version }}"
+      group: "${{ matrix.group }}"
     secrets: "inherit"

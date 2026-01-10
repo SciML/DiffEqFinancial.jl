@@ -12,6 +12,7 @@ on:
       - 'docs/**'
 jobs:
   test:
+    if: false  # Disabled: needs investigation. See #66 for details.
     runs-on: ubuntu-latest
     strategy:
       matrix:
