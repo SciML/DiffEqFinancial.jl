@@ -84,9 +84,8 @@ function BlackScholesProblem(
         r, Θ, σ, u0, tspan; callback = CallbackSet(),
         noise_rate_prototype = nothing, seed = UInt64(0)
     )
-    T = typeof(u0)
     return GeneralizedBlackScholesProblem(
-        r, (t) -> zero(T), Θ, σ, u0, tspan, callback = callback,
+        r, (t) -> zero(t), Θ, σ, u0, tspan, callback = callback,
         seed = seed
     )
 end
