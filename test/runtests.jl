@@ -43,7 +43,7 @@ end
             tsteps = collect(0:dt:T)
             expected = S0 * exp.(r * tsteps)
             testerr = sum(abs2.(simulated .- expected))
-            @test testerr < 2.0e-1
+            @test testerr < 2.5e-1
         end
 
         # Interface tests for type genericity

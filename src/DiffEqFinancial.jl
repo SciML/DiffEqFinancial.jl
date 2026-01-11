@@ -1,6 +1,6 @@
 module DiffEqFinancial
 
-using DiffEqBase: AbstractSDEProblem, CallbackSet, SDEFunction, SDEProblem, isinplace
+using DiffEqBase: AbstractSDEProblem, CallbackSet, SDEFunction, SDEProblem
 using DiffEqNoiseProcess: CorrelatedWienerProcess!, NoiseProcess
 using Distributions: NoncentralChisq
 using Markdown: @doc_str
