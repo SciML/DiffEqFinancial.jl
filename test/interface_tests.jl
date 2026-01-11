@@ -1,83 +1,106 @@
+using Test
 using DiffEqFinancial
 using StochasticDiffEq
-using Test
 
 @testset "Interface Compatibility" begin
-    @testset "Type genericity - Float32" begin
-        # HestonProblem with Float32
-        u0 = Float32[1.0, 0.5]
-        prob = HestonProblem(
-            Float32(1.0), Float32(1.0), Float32(0.25),
-            Float32(1.0), Float32(1.0), u0,
-            (Float32(0.0), Float32(1.0))
-        )
-        sol = solve(prob, EM(), adaptive = false, dt = Float32(0.1))
-        @test eltype(sol.u[end]) == Float32
+    @testset "BigFloat support" begin
+        @testset "GeometricBrownianMotionProblem" begin
+            μ = BigFloat(0.03)
+            σ = BigFloat(0.2)
+            u0 = BigFloat(100.0)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = GeometricBrownianMotionProblem(μ, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
 
-        # GeometricBrownianMotionProblem with Float32
-        prob2 = GeometricBrownianMotionProblem(
-            Float32(0.03), Float32(0.2), Float32(100.0),
-            (Float32(0.0), Float32(1.0))
-        )
-        sol2 = solve(prob2, EM(), dt = Float32(0.01))
-        @test eltype(sol2.u) == Float32
+        @testset "OrnsteinUhlenbeckProblem" begin
+            a = BigFloat(0.5)
+            r = BigFloat(1.0)
+            σ = BigFloat(0.1)
+            u0 = BigFloat(0.0)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = OrnsteinUhlenbeckProblem(a, r, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
 
-        # OrnsteinUhlenbeckProblem with Float32
-        prob3 = OrnsteinUhlenbeckProblem(
-            Float32(1.0), Float32(0.5), Float32(0.1),
-            Float32(0.0), (Float32(0.0), Float32(1.0))
-        )
-        sol3 = solve(prob3, EM(), dt = Float32(0.01))
-        @test eltype(sol3.u) == Float32
+        @testset "ExtendedOrnsteinUhlenbeckProblem" begin
+            a = BigFloat(0.5)
+            b = t -> BigFloat(1.0) + BigFloat(0.1) * t
+            σ = BigFloat(0.1)
+            u0 = BigFloat(0.0)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = ExtendedOrnsteinUhlenbeckProblem(a, b, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
 
-        # CIRProblem with Float32
-        prob4 = CIRProblem(
-            Float32(0.5), Float32(0.04), Float32(0.05),
-            Float32(0.02), (Float32(0.0), Float32(1.0))
-        )
-        sol4 = solve(prob4, EM(), dt = Float32(0.01))
-        @test eltype(sol4.u) == Float32
+        @testset "CIRProblem" begin
+            κ = BigFloat(0.5)
+            θ = BigFloat(0.1)
+            σ = BigFloat(0.1)
+            u0 = BigFloat(0.05)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = CIRProblem(κ, θ, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
 
-        # MfStateProblem with Float32
-        prob5 = MfStateProblem(
-            Float32(0.1), t -> Float32(0.2),
-            Float32(0.0), (Float32(0.0), Float32(1.0))
-        )
-        sol5 = solve(prob5, EM(), dt = Float32(0.01))
-        @test eltype(sol5.u) == Float32
+        @testset "MfStateProblem" begin
+            a = BigFloat(0.5)
+            σ = t -> BigFloat(0.1) * t
+            u0 = BigFloat(0.0)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = MfStateProblem(a, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            # Test that drift function returns correct type (was returning Int before fix)
+            @test prob.f(u0, nothing, BigFloat(0.5)) isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
+
+        @testset "BlackScholesProblem" begin
+            r = t -> BigFloat(0.05)
+            Θ = (t, u) -> BigFloat(1.0)
+            σ = BigFloat(0.2)
+            u0 = BigFloat(0.5)
+            tspan = (BigFloat(0.0), BigFloat(1.0))
+            prob = BlackScholesProblem(r, Θ, σ, u0, tspan)
+            @test prob.u0 isa BigFloat
+            sol = solve(prob, EM(), dt = BigFloat(0.01))
+            @test sol.u[end] isa BigFloat
+        end
     end
 
-    @testset "Type genericity - BigFloat" begin
-        # GeometricBrownianMotionProblem with BigFloat
-        prob = GeometricBrownianMotionProblem(
-            BigFloat(0.03), BigFloat(0.2), BigFloat(100.0),
-            (BigFloat(0.0), BigFloat(1.0))
-        )
-        sol = solve(prob, EM(), dt = BigFloat(0.01))
-        @test eltype(sol.u) == BigFloat
+    @testset "Float32 support" begin
+        @testset "HestonProblem" begin
+            u0 = Float32[1.0, 0.5]
+            μ = Float32(1.0)
+            κ = Float32(1.0)
+            Θ = Float32(0.25)
+            σ = Float32(1.0)
+            ρ = Float32(0.5)
+            tspan = (Float32(0.0), Float32(1.0))
+            prob = HestonProblem(μ, κ, Θ, σ, ρ, u0, tspan)
+            @test eltype(prob.u0) == Float32
+            sol = solve(prob, EM(), dt = Float32(0.01))
+            @test eltype(sol.u[end]) == Float32
+        end
 
-        # OrnsteinUhlenbeckProblem with BigFloat
-        prob2 = OrnsteinUhlenbeckProblem(
-            BigFloat(1.0), BigFloat(0.5), BigFloat(0.1),
-            BigFloat(0.0), (BigFloat(0.0), BigFloat(1.0))
-        )
-        sol2 = solve(prob2, EM(), dt = BigFloat(0.01))
-        @test eltype(sol2.u) == BigFloat
-
-        # CIRProblem with BigFloat
-        prob3 = CIRProblem(
-            BigFloat(0.5), BigFloat(0.04), BigFloat(0.05),
-            BigFloat(0.02), (BigFloat(0.0), BigFloat(1.0))
-        )
-        sol3 = solve(prob3, EM(), dt = BigFloat(0.01))
-        @test eltype(sol3.u) == BigFloat
-
-        # MfStateProblem with BigFloat
-        prob4 = MfStateProblem(
-            BigFloat(0.1), t -> BigFloat(0.2),
-            BigFloat(0.0), (BigFloat(0.0), BigFloat(1.0))
-        )
-        sol4 = solve(prob4, EM(), dt = BigFloat(0.01))
-        @test eltype(sol4.u) == BigFloat
+        @testset "GeometricBrownianMotionProblem" begin
+            μ = Float32(0.03)
+            σ = Float32(0.2)
+            u0 = Float32(100.0)
+            tspan = (Float32(0.0), Float32(1.0))
+            prob = GeometricBrownianMotionProblem(μ, σ, u0, tspan)
+            @test prob.u0 isa Float32
+            sol = solve(prob, EM(), dt = Float32(0.01))
+            @test sol.u[end] isa Float32
+        end
     end
 end

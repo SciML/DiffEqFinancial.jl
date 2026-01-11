@@ -23,7 +23,8 @@ function HestonProblem(
         return du[2] = σ * sqrt_mod_v
     end
     T = eltype(u0)
-    Γ = T[1 ρ; ρ 1] # Covariance Matrix
+    ρ_T = T(ρ)
+    Γ = T[1 ρ_T; ρ_T 1] # Covariance Matrix
     noise_rate_prototype = nothing
 
     if seed == 0
