@@ -26,3 +26,4 @@ high order algorithms are available.
 The project is looking for contributors who would like to implement more models.
 If you're interested and need help getting started, talk to Chris Rackauckas in
 the [Gitter chat](https://gitter.im/JuliaDiffEq/Lobby).
+
