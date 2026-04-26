@@ -27,8 +27,8 @@ end
 
             r = 0.03
             sigma = 0.2
-            S0 = 100
-            t = 0
+            S0 = 100.0
+            t = 0.0
             T = 1.0
             days = 252
             dt = 1 / days
@@ -37,7 +37,7 @@ end
             sol = solve(prob, EM(); dt = dt)
             monte_prob = EnsembleProblem(prob)
             sol = solve(monte_prob, EM(); dt = dt, trajectories = 1000000)
-            us = [sol[i].u for i in eachindex(sol)]
+            us = [sol.u[i].u for i in eachindex(sol.u)]
             simulated = mean(us)
 
             tsteps = collect(0:dt:T)
@@ -77,7 +77,7 @@ end
                 prob = GeometricBrownianMotionProblem(μ, σ, u0, (0.0, t))
                 monte_prob = EnsembleProblem(prob)
                 sol = solve(monte_prob, EM(); dt = 0.01, trajectories = 10000)
-                final_values = [sol[i].u[end] for i in eachindex(sol)]
+                final_values = [sol.u[i].u[end] for i in eachindex(sol.u)]
                 simulated_mean = mean(final_values)
                 simulated_var = var(final_values)
 
@@ -118,7 +118,7 @@ end
                 prob = OrnsteinUhlenbeckProblem(a, r, σ, u0, (0.0, t))
                 monte_prob = EnsembleProblem(prob)
                 sol = solve(monte_prob, EM(); dt = 0.01, trajectories = 10000)
-                final_values = [sol[i].u[end] for i in eachindex(sol)]
+                final_values = [sol.u[i].u[end] for i in eachindex(sol.u)]
                 simulated_mean = mean(final_values)
                 simulated_var = var(final_values)
 
@@ -166,7 +166,7 @@ end
                 prob = CIRProblem(κ, θ, σ, u0, (0.0, t))
                 monte_prob = EnsembleProblem(prob)
                 sol = solve(monte_prob, EM(); dt = 0.001, trajectories = 10000)
-                final_values = [sol[i].u[end] for i in eachindex(sol)]
+                final_values = [sol.u[i].u[end] for i in eachindex(sol.u)]
                 simulated_mean = mean(final_values)
                 simulated_var = var(final_values)
 
