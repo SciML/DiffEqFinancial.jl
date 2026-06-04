@@ -11,11 +11,11 @@ Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
 RandomNumbers = "e6cf234a-135c-5ec9-84dd-332b85af5143"
 
 [compat]
-DiffEqBase = "6, 7"
-DiffEqNoiseProcess = "5"
+DiffEqBase = "6.133.1, 7"
+DiffEqNoiseProcess = "5.13.0"
 Distributions = "0.25.100"
-RandomNumbers = "1"
-StochasticDiffEq = "6.28"
+RandomNumbers = "1.5.3"
+StochasticDiffEq = "6.65.0"
 julia = "1.10"
 
 [extras]

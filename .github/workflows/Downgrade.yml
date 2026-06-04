@@ -12,10 +12,10 @@ on:
       - 'docs/**'
 jobs:
   test:
-    if: false  # Disabled: needs investigation. See #66 for details.
     name: Downgrade
     uses: "SciML/.github/.github/workflows/downgrade.yml@v1"
     with:
       julia-version: "1.10"
       skip: "Pkg,TOML"
+      allow-reresolve: false
     secrets: "inherit"
