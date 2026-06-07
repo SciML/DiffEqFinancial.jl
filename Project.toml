@@ -15,7 +15,7 @@ DiffEqBase = "6.133.1, 7"
 DiffEqNoiseProcess = "5.13.0"
 Distributions = "0.25.100"
 RandomNumbers = "1.5.3"
-StochasticDiffEq = "6.65.0"
+StochasticDiffEq = "6.65.0, 7"
 julia = "1.10"
 
 [extras]
