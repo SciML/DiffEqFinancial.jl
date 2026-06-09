@@ -14,8 +14,11 @@ RandomNumbers = "e6cf234a-135c-5ec9-84dd-332b85af5143"
 DiffEqBase = "6.133.1, 7"
 DiffEqNoiseProcess = "5.13.0"
 Distributions = "0.25.100"
+Pkg = "1"
 RandomNumbers = "1.5.3"
+Statistics = "1"
 StochasticDiffEq = "6.65.0, 7"
+Test = "1"
 julia = "1.10"
 
 [extras]
