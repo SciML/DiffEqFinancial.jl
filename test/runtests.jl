@@ -1,21 +1,11 @@
 using Pkg
-using DiffEqFinancial, Statistics, StochasticDiffEq
 using Test
+using DiffEqFinancial, Statistics, StochasticDiffEq
 
-const GROUP = get(ENV, "GROUP", "all")
+const GROUP = get(ENV, "GROUP", "All")
 
-function activate_nopre_env()
-    Pkg.activate("nopre")
-    Pkg.develop(PackageSpec(path = dirname(@__DIR__)))
-    return Pkg.instantiate()
-end
-
-@testset "Interface Compatibility" begin
-    include("interface_tests.jl")
-end
-
-@testset "DiffEqFinancial.jl" begin
-    if GROUP == "all" || GROUP == "core"
+if GROUP == "All" || GROUP == "Core"
+    @testset "DiffEqFinancial.jl" begin
         @testset "Core Tests" begin
             u0 = [1.0; 0.5]
             σ = 0.25
@@ -221,17 +211,13 @@ end
             end
         end
     end
+end
 
-    if GROUP == "all" || GROUP == "nopre"
-        activate_nopre_env()
-        @testset "Explicit Imports" begin
-            include("nopre/explicit_imports.jl")
-        end
-        @testset "JET Tests" begin
-            include("nopre/jet_tests.jl")
-        end
-        @testset "AllocCheck - Zero Allocations" begin
-            include("nopre/alloc_tests.jl")
-        end
+if GROUP == "All" || GROUP == "QA"
+    Pkg.activate(joinpath(@__DIR__, "qa"))
+    Pkg.develop(PackageSpec(path = dirname(@__DIR__)))
+    Pkg.instantiate()
+    @testset "Quality Assurance" begin
+        include(joinpath(@__DIR__, "qa", "qa.jl"))
     end
 end
