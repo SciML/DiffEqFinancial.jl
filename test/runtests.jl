@@ -1,11 +1,10 @@
 using Pkg
 using Test
+using DiffEqFinancial, Statistics, StochasticDiffEq
 
 const GROUP = get(ENV, "GROUP", "All")
 
 if GROUP == "All" || GROUP == "Core"
-    using DiffEqFinancial, Statistics, StochasticDiffEq
-
     @testset "DiffEqFinancial.jl" begin
         @testset "Core Tests" begin
             u0 = [1.0; 0.5]
