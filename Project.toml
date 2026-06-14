@@ -14,8 +14,9 @@ RandomNumbers = "e6cf234a-135c-5ec9-84dd-332b85af5143"
 DiffEqBase = "6.133.1, 7"
 DiffEqNoiseProcess = "5.13.0"
 Distributions = "0.25.100"
-Pkg = "1"
 RandomNumbers = "1.5.3"
+SafeTestsets = "0.1, 1"
+SciMLTesting = "1"
 Statistics = "1"
 StochasticDiffEq = "6.65.0, 7"
 Test = "1"
@@ -23,10 +24,11 @@ julia = "1.10"
 
 [extras]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
+SciMLTesting = "09d9d899-5365-40a9-917a-5f67fddea283"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StochasticDiffEq = "789caeaf-c7a9-5a7d-9973-96adeb23e2a0"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "Statistics", "StochasticDiffEq", "Distributions", "Pkg"]
+test = ["Test", "Statistics", "StochasticDiffEq", "Distributions", "SafeTestsets", "SciMLTesting"]
