@@ -10,7 +10,6 @@ makedocs(
     authors = "Chris Rackauckas",
     modules = [DiffEqFinancial],
     clean = true,
-    doctest = false,
     format = Documenter.HTML(
         assets = ["assets/favicon.ico"],
         canonical = "https://docs.sciml.ai/DiffEqFinancial/stable/"
