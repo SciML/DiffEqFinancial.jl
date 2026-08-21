@@ -4,12 +4,14 @@ using DiffEqBase: CallbackSet, SDEFunction, SDEProblem
 using DiffEqNoiseProcess: CorrelatedWienerProcess!, NoiseProcess
 using Distributions: NoncentralChisq
 using Markdown: @doc_str
+using PrecompileTools: @compile_workload, @setup_workload
 using SciMLBase: AbstractSDEProblem
 
 import RandomNumbers: Xorshifts
 
 include("problems.jl")
 include("analytics.jl")
+include("precompile.jl")
 
 export HestonProblem, BlackScholesProblem, GeneralizedBlackScholesProblem,
     ExtendedOrnsteinUhlenbeckProblem, OrnsteinUhlenbeckProblem,
