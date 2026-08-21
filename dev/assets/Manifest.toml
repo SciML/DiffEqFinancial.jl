@@ -217,9 +217,9 @@ version = "1.11.0"
 
 [[deps.DiffEqBase]]
 deps = ["ArrayInterface", "BracketingNonlinearSolve", "ConcreteStructs", "DocStringExtensions", "FastBroadcast", "FastClosures", "FastPower", "FunctionWrappers", "FunctionWrappersWrappers", "LinearAlgebra", "Logging", "Markdown", "MuladdMacro", "PrecompileTools", "Printf", "RecursiveArrayTools", "Reexport", "RespecializeParams", "SciMLBase", "SciMLLogging", "SciMLOperators", "SciMLStructures", "Setfield", "StaticArraysCore", "SymbolicIndexingInterface", "TruncatedStacktraces"]
-git-tree-sha1 = "3c6ceb2c59e132fd276ca16fdb0ecd043791d22d"
+git-tree-sha1 = "5a4cc8259b903c537e8df3acf80075351d207a15"
 uuid = "2b5f629d-d688-5b77-993f-72d75c75574e"
-version = "7.18.0"
+version = "7.18.1"
 
     [deps.DiffEqBase.extensions]
     DiffEqBaseCUDAExt = "CUDA"
@@ -259,7 +259,7 @@ version = "7.18.0"
     Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [[deps.DiffEqFinancial]]
-deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "Markdown", "RandomNumbers", "SciMLBase"]
+deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "Markdown", "PrecompileTools", "RandomNumbers", "SciMLBase"]
 path = "/home/runner/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
 version = "2.10.3"
@@ -964,9 +964,9 @@ version = "0.5.2+0"
 
 [[deps.Roots]]
 deps = ["Accessors", "CommonSolve", "Printf"]
-git-tree-sha1 = "7fb25a964849d90a0446366cdefca822e0e84900"
+git-tree-sha1 = "13a9e0164267bb9ebc55c1c5d72fceea8f09555b"
 uuid = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
-version = "3.0.6"
+version = "3.0.7"
 
     [deps.Roots.extensions]
     RootsChainRulesCoreExt = "ChainRulesCore"
