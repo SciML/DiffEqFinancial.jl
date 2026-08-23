@@ -262,7 +262,7 @@ version = "7.18.1"
 deps = ["DiffEqBase", "DiffEqNoiseProcess", "Distributions", "Markdown", "PrecompileTools", "RandomNumbers", "SciMLBase"]
 path = "/home/runner/_work/DiffEqFinancial.jl/DiffEqFinancial.jl"
 uuid = "5a0ffddc-d203-54b0-88ba-2c03c0fc2e67"
-version = "2.10.3"
+version = "2.11.0"
 
 [[deps.DiffEqNoiseProcess]]
 deps = ["CommonSolve", "DiffEqBase", "Distributions", "GPUArraysCore", "LinearAlgebra", "Markdown", "PoissonRandom", "QuadGK", "Random", "RecipesBase", "RecursiveArrayTools", "ResettableStacks", "SciMLBase", "StaticArraysCore", "Statistics"]
