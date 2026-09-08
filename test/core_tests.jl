@@ -20,12 +20,14 @@ using DiffEqFinancial, Statistics, StochasticDiffEq, Test
     prob = GeometricBrownianMotionProblem(r, sigma, S0, (t, T))
     sol = solve(prob, EM(); dt = dt)
     monte_prob = EnsembleProblem(prob)
-    sol = solve(monte_prob, EM(); dt = dt, trajectories = 1000000)
+    # 1e6 trajectories OOMs LLVM/codegen or the result buffer on 32-bit runners.
+    ntraj = Sys.WORD_SIZE == 32 ? 20_000 : 1_000_000
+    sol = solve(monte_prob, EM(); dt = dt, trajectories = ntraj)
     us = [sol.u[i].u for i in eachindex(sol.u)]
     simulated = mean(us)
 
     tsteps = collect(0:dt:T)
     expected = S0 * exp.(r * tsteps)
     testerr = sum(abs2.(simulated .- expected))
-    @test testerr < 2.5e-1
+    @test testerr < (Sys.WORD_SIZE == 32 ? 2.0 : 2.5e-1)
 end
