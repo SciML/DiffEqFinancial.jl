@@ -23,8 +23,14 @@ using DiffEqFinancial, Statistics, StochasticDiffEq, Test
     # 1e6 trajectories OOMs LLVM/codegen or the result buffer on 32-bit runners.
     # With fewer trajectories the Monte Carlo SSE is noisier; keep a looser
     # bound that still catches gross bias (observed ~8 on i686 with 20k).
+    # Seed the 32-bit ensemble so `testerr` is reproducible to the last digit
+    # (the unseeded MC SSE occasionally exceeds the bound, e.g. ~28 in CI).
     ntraj = Sys.WORD_SIZE == 32 ? 20_000 : 1_000_000
-    sol = solve(monte_prob, EM(); dt = dt, trajectories = ntraj)
+    sol = if Sys.WORD_SIZE == 32
+        solve(monte_prob, EM(); dt = dt, trajectories = ntraj, seed = 12345)
+    else
+        solve(monte_prob, EM(); dt = dt, trajectories = ntraj)
+    end
     us = [sol.u[i].u for i in eachindex(sol.u)]
     simulated = mean(us)
 
